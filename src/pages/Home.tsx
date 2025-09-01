@@ -29,7 +29,6 @@ export default function GameScreen() {
     }
   }, []);
 
-
   const goToLevels = () => {
     setTimeout(() => {
       navigate("/niveles");
@@ -37,11 +36,7 @@ export default function GameScreen() {
   };
 
   return (
-    <div
-      id="game-screen"
-      className="min-h-screen bg-[url('/niveles/bg_numerika.webp')] bg-no-repeat bg-center bg-cover"
-    >
- 
+    <>
       {/* Contenido principal */}
       <main className="p-8">
         {/* Sección de introducción */}
@@ -114,6 +109,6 @@ export default function GameScreen() {
           </div>
         </section>
       </main>
-    </div>
+    </>
   );
 }

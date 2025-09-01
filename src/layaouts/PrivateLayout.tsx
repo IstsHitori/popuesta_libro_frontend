@@ -35,7 +35,7 @@ export default function PrivateLayout() {
 
   // Layout principal
   return (
-    <div className="flex min-h-screen flex-col bg-gray-50">
+    <div className="flex min-h-screen flex-col">
       {/* <header className="sticky top-0 z-40 bg-white border-b shadow-sm">
         <div className="flex h-16 items-center justify-between px-4 md:px-6">
           <div className="flex items-center gap-2">
@@ -54,7 +54,10 @@ export default function PrivateLayout() {
       </header> */}
 
       <div className="flex flex-1">
-        <main className="flex-1 overflow-auto">
+        <main
+          id="game-screen"
+          className="min-h-screen bg-[url('/niveles/bg_numerika.webp')] bg-no-repeat bg-center bg-cover w-full"
+        >
           <HomeHeader />
           <Outlet />
         </main>
