@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { MdOutlineDocumentScanner } from "react-icons/md";
 import HeaderForm from "./HeaderForm";
+import InputField from "./InputField";
 
 export default function LoginForm() {
   return (
@@ -25,27 +26,11 @@ export default function LoginForm() {
           <h2 className="text-white mb-5 text-center text-[1.6rem]">
             ¡Bienvenido de vuelta!
           </h2>
-          <div className="mb-5">
-            <label className="relative flex items-center bg-white/10 rounded-lg border border-white/20 px-3 py-2">
-              <span className="text-primary text-xl flex items-center mr-3">
-                <MdOutlineDocumentScanner className="text-indigo-500" />
-              </span>
-              <input
-                type="number"
-                id="login-document"
-                placeholder="Número de documento"
-                required
-                className={`
-                w-full bg-transparent border-none outline-none
-                text-base text-white placeholder:text-white/80
-                py-1
-                [&::-webkit-outer-spin-button]:appearance-none
-                [&::-webkit-inner-spin-button]:appearance-none
-                [-moz-appearance:textfield]
-              `}
-              />
-            </label>
-          </div>
+          <InputField
+            type="number"
+            label="Número de documento"
+            Icon={<MdOutlineDocumentScanner className="text-indigo-500" />}
+          />
           <button
             type="submit"
             className={`
