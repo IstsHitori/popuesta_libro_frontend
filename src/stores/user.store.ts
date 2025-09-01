@@ -2,7 +2,7 @@ import type { UserProfile } from "@/types/user.type";
 import { create } from "zustand/react";
 
 export interface UserState {
-  userProfile: UserProfile | null;
+  userProfile: UserProfile;
 }
 
 export interface UserActions {
@@ -11,7 +11,7 @@ export interface UserActions {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const useUserStore = create<UserState & UserActions>((set, get) => ({
-  userProfile: null,
+  userProfile: {} as UserProfile,
   setUserProfile: (userProfile) => {
     set(() => ({ userProfile }));
   },

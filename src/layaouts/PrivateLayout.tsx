@@ -2,6 +2,7 @@ import { Navigate, Outlet } from "react-router-dom";
 
 import useAuth from "@/hooks/auth/useAuth";
 import { useQueryUserProfile } from "@/hooks/profile/useQueryUserProfile";
+import HomeHeader from "@/components/home/HomeHeader";
 
 export default function PrivateLayout() {
   const { authToken } = useAuth();
@@ -53,7 +54,8 @@ export default function PrivateLayout() {
       </header> */}
 
       <div className="flex flex-1">
-        <main className="flex-1 p-4 md:p-6 overflow-auto">
+        <main className="flex-1 overflow-auto">
+          <HomeHeader />
           <Outlet />
         </main>
       </div>
