@@ -1,0 +1,36 @@
+import { createBrowserRouter, Navigate } from "react-router-dom";
+import PrivateLayout from "./layaouts/PrivateLayout";
+import LoginPage from "./pages/LoginPage";
+import AuthLayout from "./layaouts/AuthLayout";
+import Home from "./pages/Home";
+
+export const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Navigate to="/auth/login" replace />,
+  },
+  {
+    path: "/auth",
+    element: <AuthLayout />,
+    children: [
+      {
+        path: "login",
+        element: <LoginPage />,
+      },
+    ],
+  },
+  {
+    path: "/app",
+    element: <PrivateLayout />,
+    children: [
+      {
+        path: "",
+        element: <Home />,
+      },
+      {
+        path: "*",
+        element: <div>Page not found</div>,
+      },
+    ],
+  },
+]);
