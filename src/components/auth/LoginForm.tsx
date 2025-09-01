@@ -2,8 +2,41 @@ import { Link } from "react-router-dom";
 import { MdOutlineDocumentScanner } from "react-icons/md";
 import HeaderForm from "./HeaderForm";
 import InputField from "./InputField";
+import { useForm, type SubmitHandler } from "react-hook-form";
+import type { LoginForm } from "@/types";
+import { loginFormSchema } from "@/schemas";
+import { authLogin } from "@/services/auth.service";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "react-toastify";
+import useAuth from "@/hooks/auth/useAuth";
+import useUserProfile from "@/hooks/profile/useUserProfile";
 
-export default function LoginForm() {
+export default function LoginAuthForm() {
+  const { setAuthToken } = useAuth();
+  const { setUserProfile } = useUserProfile();
+  const defaultLogin: LoginForm = {
+    document: "",
+  };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginForm>({
+    defaultValues: defaultLogin,
+    resolver: zodResolver(loginFormSchema),
+  });
+
+  const onSubmit: SubmitHandler<LoginForm> = async (loginData) => {
+    try {
+      const response = await authLogin(loginData);
+      setAuthToken(response.token);
+      setUserProfile(response.user);
+    } catch (error) {
+      if (error instanceof Error) toast.error(error.message);
+    }
+  };
+  const { ref, ...rest } = register("document");
+
   return (
     <div
       id="login-screen"
@@ -22,14 +55,17 @@ export default function LoginForm() {
       >
         <HeaderForm />
         {/* Formulario */}
-        <form id="login-form" className="block text-left">
+        <form onSubmit={handleSubmit(onSubmit)} className="block text-left">
           <h2 className="text-white mb-5 text-center text-[1.6rem]">
             ¡Bienvenido de vuelta!
           </h2>
           <InputField
-            type="number"
+            type="text"
             label="Número de documento"
             Icon={<MdOutlineDocumentScanner className="text-indigo-500" />}
+            inputRest={ref}
+            {...rest}
+            error={errors.document}
           />
           <button
             type="submit"

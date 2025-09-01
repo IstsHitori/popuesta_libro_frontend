@@ -3,7 +3,7 @@ import z from "zod";
 import { userProfileSchema } from "./user.schema";
 
 export const loginFormSchema = z.object({
-  document: z.number({ error: AUTH_MESSAGES.DOCUMENT_REQUIRED }),
+  document: z.string({ error: AUTH_MESSAGES.DOCUMENT_REQUIRED }),
 });
 
 export const loginResponseSchema = z.object({

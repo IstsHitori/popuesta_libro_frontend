@@ -1,25 +1,29 @@
-import { Outlet } from "react-router-dom";
-
+import { Outlet, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import useAuth from "@/hooks/auth/useAuth";
-import Loader from "@/components/Loader";
+import LoadingScreen from "@/components/loaders/LoadingScreen";
 
-export default function AuhtLayout() {
+export default function AuthLayout() {
   const { authToken } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (authToken) {
       setIsLoading(true);
+      const timeout = setTimeout(() => {
+        navigate("/app");
+      }, 2500); 
+      return () => clearTimeout(timeout);
     } else {
       setIsLoading(false);
     }
-  }, [authToken]);
+  }, [authToken, navigate]);
 
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <Loader />
+        <LoadingScreen />
       </div>
     );
   }

@@ -8,7 +8,7 @@ export default function Loader() {
           <div className="auth-check-icon">
             <i className="fas fa-user-check"></i>
           </div>
-          <h2 className="text-white">Verificando sesión...</h2>
+          <h2 className="text-black">Verificando sesión...</h2>
           <p>Espera un momento mientras verificamos tu cuenta</p>
         </div>
       </div>

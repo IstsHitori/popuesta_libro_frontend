@@ -3,7 +3,7 @@ import axios from "axios";
 const getToken = () => localStorage.getItem("authToken");
 
 const axiosPrivate = axios.create({
-  baseURL: import.meta.env.API_URL!,
+  baseURL: import.meta.env.VITE_BACKEND_URL!,
   headers: {
     "Content-Type": "application/json",
   },
