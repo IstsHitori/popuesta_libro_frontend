@@ -3,6 +3,7 @@ import PrivateLayout from "./layaouts/PrivateLayout";
 import LoginPage from "./pages/LoginPage";
 import AuthLayout from "./layaouts/AuthLayout";
 import Home from "./pages/Home";
+import RegisterForm from "./components/auth/RegisterForm";
 
 export const router = createBrowserRouter([
   {
@@ -16,6 +17,10 @@ export const router = createBrowserRouter([
       {
         path: "login",
         element: <LoginPage />,
+      },
+      {
+        path: "register",
+        element: <RegisterForm />,
       },
     ],
   },
