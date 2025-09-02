@@ -10,7 +10,7 @@ export default function GameScreen() {
   const goToLevels = () => {
     setIsAnimate(true);
     setTimeout(() => {
-      navigate("/niveles");
+      navigate("/app/niveles");
       setIsAnimate(false);
     }, 1500);
   };
