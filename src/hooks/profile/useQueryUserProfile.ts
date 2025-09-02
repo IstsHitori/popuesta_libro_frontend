@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 
 import useAuth from "../auth/useAuth";
 import useUserProfile from "./useUserProfile";
+import { getUserProfile } from "@/services/auth.service";
+import { toast } from "react-toastify";
 
 export const useQueryUserProfile = () => {
   const { authToken } = useAuth();
@@ -17,12 +19,11 @@ export const useQueryUserProfile = () => {
       }
 
       try {
-        // const profile = await getUserProfile();
-        // setUser(profile);
-        // setError(null);
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const profile = await getUserProfile();
+        setUserProfile(profile);
+        setError(null);
       } catch (err) {
-        setError("No se pudo cargar el perfil.");
+        if (err instanceof Error) toast.error(err.message);
       } finally {
         setLoading(false);
       }

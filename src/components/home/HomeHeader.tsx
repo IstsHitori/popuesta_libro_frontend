@@ -3,9 +3,11 @@ import { CiLogout } from "react-icons/ci";
 import { TfiCup } from "react-icons/tfi";
 import { IoIosStar } from "react-icons/io";
 import { FaUserAstronaut } from "react-icons/fa";
+import useAuth from "@/hooks/auth/useAuth";
 
 export default function HomeHeader() {
   const { userProfile } = useUserProfile();
+  const { clearAuthToken } = useAuth();
   if (!userProfile) return;
   return (
     <>
@@ -34,7 +36,10 @@ export default function HomeHeader() {
             <span>Nivel {userProfile?.level ?? 1} actual</span>
           </div>
         </div>
-        <button className="bg-error text-white border-none px-4 py-3 rounded-md cursor-pointer transition shadow-sm flex items-center gap-2 hover:bg-red-700 hover:-translate-y-0.5 hover:shadow-md">
+        <button
+          onClick={() => clearAuthToken()}
+          className="bg-error text-white border-none px-4 py-3 rounded-md cursor-pointer transition shadow-sm flex items-center gap-2 hover:bg-red-700 hover:-translate-y-0.5 hover:shadow-md"
+        >
           <CiLogout className="text-xl" />
           Salir
         </button>

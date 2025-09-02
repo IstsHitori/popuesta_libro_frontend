@@ -1,39 +1,23 @@
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import image_kid from "/personajes/personaje_niño.webp";
-
-interface User {
-  name: string;
-  school: string;
-  level: number;
-  score: number;
-}
+import { VscDebugStart } from "react-icons/vsc";
+import { useState } from "react";
+import LoadingScreen from "@/components/loaders/LoadingScreen";
 
 export default function GameScreen() {
-  const [user, setUser] = useState<User | null>(null);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const storedUser = localStorage.getItem("currentUser");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    } else {
-      const tempUser = {
-        name: "Explorador",
-        school: "Escuela",
-        level: 1,
-        score: 0,
-      };
-      localStorage.setItem("currentUser", JSON.stringify(tempUser));
-      setUser(tempUser);
-    }
-  }, []);
-
+  const [isAnimate, setIsAnimate] = useState(false);
   const goToLevels = () => {
+    setIsAnimate(true);
     setTimeout(() => {
       navigate("/niveles");
+      setIsAnimate(false);
     }, 1500);
   };
+
+  if (isAnimate) {
+    return <LoadingScreen />;
+  }
 
   return (
     <>
@@ -99,10 +83,10 @@ export default function GameScreen() {
                 a través de juegos interactivos
               </p>
               <button
-                className="bg-gradient-to-br from-secondary to-secondary-dark text-white border-none px-8 py-4 rounded-lg text-[1.2rem] font-semibold cursor-pointer transition flex items-center gap-2 shadow-md mt-6 hover:-translate-y-1 hover:shadow-lg"
+                className="bg-gradient-to-br from-emerald-400 via-emerald-500 to-emerald-600 text-white border-none px-8 py-4 rounded-lg text-[1.2rem] font-semibold cursor-pointer transition flex items-center gap-2 shadow-md mt-6 hover:-translate-y-1 hover:shadow-lg"
                 onClick={goToLevels}
               >
-                <i className="fas fa-play text-[1.3rem]" />
+                <VscDebugStart />
                 ¡Comenzar Aventura!
               </button>
             </div>

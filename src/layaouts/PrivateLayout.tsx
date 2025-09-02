@@ -8,7 +8,7 @@ export default function PrivateLayout() {
   const { authToken } = useAuth();
   const { loading, error } = useQueryUserProfile();
 
-  if (!authToken) return <Navigate to="/auth/iniciar-sesion" replace />;
+  if (!authToken) return <Navigate to="/auth/login" replace />;
 
   // Mientras se carga el perfil
   if (loading) {
