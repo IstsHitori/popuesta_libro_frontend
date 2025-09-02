@@ -4,7 +4,8 @@ import LoginPage from "./pages/LoginPage";
 import AuthLayout from "./layaouts/AuthLayout";
 import Home from "./pages/Home";
 import RegisterForm from "./components/auth/RegisterForm";
-import SelectLevelpage from "./pages/SelectLevelpage";
+import SelectLevelpage from "./pages/SelectLevelPage";
+import LevelOnePage from "./pages/levels/LevelOnePage";
 
 export const router = createBrowserRouter([
   {
@@ -36,6 +37,10 @@ export const router = createBrowserRouter([
       {
         path: "niveles",
         element: <SelectLevelpage />,
+      },
+      {
+        path: "niveles/1",
+        element: <LevelOnePage />,
       },
       {
         path: "*",

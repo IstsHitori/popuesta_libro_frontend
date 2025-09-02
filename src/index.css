@@ -4,6 +4,10 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  --bg-level-1: #7ef05b;
+  --bg-level-2: #4297ff;
+  --bg-level-3: #faff70;
+  --bg-level-4: #8a8a8a;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
