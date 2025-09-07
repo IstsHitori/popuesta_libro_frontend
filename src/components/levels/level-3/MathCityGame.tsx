@@ -131,9 +131,9 @@ export default function MathCityGame() {
                   className="w-full h-48 sm:h-56 xl:h-64 object-cover"
                 />
                 <div className="p-4">
-                  <h3 className="text-white font-bold text-lg mb-3">La Aventura de Tomás</h3>
+                  <h3 className="text-white font-bold text-lg mb-3">La Aventura de Ari</h3>
                   <p className="text-white/90 text-sm leading-relaxed mb-4">
-                    Tomás llegó a la fascinante Ciudad Matemática, donde todo está organizado en grupos perfectos. 
+                    Ari llegó a la fascinante Ciudad Matemática, donde todo está organizado en grupos perfectos. 
                     El alcalde le explicó: 'Aquí debes identificar las operaciones correctas que representan cada 
                     situación. Por ejemplo, si ves 3 tiendas con 4 productos cada una, la operación es 4+4+4=12.'
                   </p>
@@ -223,7 +223,7 @@ export default function MathCityGame() {
                   {/* Next level button */}
                   {gameStats.isLevelCompleted && (
                     <Link
-                      to="/app/niveles/nivel-4"
+                      to="/app/niveles/4"
                       className="w-full bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-lg transition-colors text-sm text-center block"
                     >
                       🚀 Avanzar al Siguiente Nivel
