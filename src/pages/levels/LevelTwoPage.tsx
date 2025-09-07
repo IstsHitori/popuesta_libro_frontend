@@ -1,8 +1,22 @@
 
 import { Link } from "react-router-dom";
 import { IoIosArrowRoundBack } from "react-icons/io";
+import LevelLoadingScreen from "@/components/levels/LevelLoadingScreen";
+import { useLevelLoading } from "@/hooks/ui/useLevelLoading";
+import { LEVEL_LOADING_CONFIG } from "@/constants/level-loading";
 
 export default function LevelTwoPage() {
+  const { isLoading, completeLoading } = useLevelLoading({ duration: 3500 });
+
+  if (isLoading) {
+    return (
+      <LevelLoadingScreen
+        {...LEVEL_LOADING_CONFIG.level2}
+        onLoadingComplete={completeLoading}
+      />
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900/20 via-blue-900/20 to-green-900/20 flex items-center justify-center">
       <div className="text-center max-w-2xl mx-auto p-8">
