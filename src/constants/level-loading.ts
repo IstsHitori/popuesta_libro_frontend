@@ -17,9 +17,9 @@ export const LEVEL_LOADING_CONFIG = {
   },
   level3: {
     levelNumber: 3,
-    levelTitle: "Fortaleza de la Ingeniería",
-    backgroundImage: "/tomas/fortaleza-de-la-ingenieria.png",
-    tip: "🏗️ Esta fortaleza requiere precisión matemática. Las estructuras se construyen con multiplicaciones exactas y cálculos perfectos.",
+    levelTitle: "Ciudad Matemática",
+    backgroundImage: "/tomas/ciudad-matematica.png",
+    tip: "�️ En la Ciudad Matemática todo está perfectamente organizado en grupos. ¡Identifica las operaciones correctas que representan cada situación!",
     duration: 3500
   },
   level4: {

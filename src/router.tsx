@@ -7,6 +7,8 @@ import RegisterForm from "./components/auth/RegisterForm";
 import SelectLevelpage from "./pages/SelectLevelPage";
 import LevelOnePage from "./pages/levels/LevelOnePage";
 import LevelTwoPage from "./pages/levels/LevelTwoPage";
+import LevelThreePage from "./pages/levels/LevelThreePage";
+import LevelFourPage from "./pages/levels/LevelFourPage";
 
 export const router = createBrowserRouter([
   {
@@ -46,6 +48,14 @@ export const router = createBrowserRouter([
       {
         path: "niveles/2",
         element: <LevelTwoPage />,
+      },
+      {
+        path: "niveles/3",
+        element: <LevelThreePage />,
+      },
+      {
+        path: "niveles/4",
+        element: <LevelFourPage />,
       },
       {
         path: "*",

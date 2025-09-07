@@ -137,7 +137,7 @@ export default function RepeatedAdditionGame() {
                   className="w-full h-48 sm:h-56 xl:h-64 object-cover"
                 />
                 <div className="p-4">
-                  <h3 className="text-white font-bold text-lg mb-3">La Aventura de Tomás</h3>
+                  <h3 className="text-white font-bold text-lg mb-3">La reparación de Tika</h3>
                   <p className="text-white/90 text-sm leading-relaxed mb-4">
                     Tomás entró al Laboratorio de Tecnología y encontró un robot averiado. El científico le explicó: 
                     'Este robot se repara resolviendo circuitos de suma repetida. Por ejemplo, si necesita 3 sensores 
@@ -231,7 +231,7 @@ export default function RepeatedAdditionGame() {
                   {/* Next level button */}
                   {gameStats.isLevelCompleted && (
                     <Link
-                      to="/app/niveles/nivel-3"
+                      to="/app/niveles/3"
                       className="w-full bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg transition-colors text-sm text-center block"
                     >
                       🚀 Avanzar al Siguiente Nivel
