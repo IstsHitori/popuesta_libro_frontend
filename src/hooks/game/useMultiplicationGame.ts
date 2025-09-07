@@ -2,10 +2,11 @@ import { useState, useCallback, useMemo } from 'react';
 import type { DragEndEvent } from '@dnd-kit/core';
 import type { 
   MultiplicationProblem, 
-  DraggableItem, 
+  VisualItem, 
   GameState, 
   DragEndResult,
-  GroupingOption
+  GroupingOption,
+  ItemType
 } from '../../types/game.types';
 
 // Following SOLID principles: Single Responsibility Principle
@@ -16,6 +17,7 @@ export const useMultiplicationGame = () => {
   const PROBLEMS_CONFIG = useMemo(() => [
     {
       result: 24,
+      itemType: 'apple' as ItemType,
       story: "En el bosque hay 24 manzanas mágicas. Ari debe organizarlas en grupos iguales para entender cómo 6×4 = 6+6+6+6 = 24",
       groupings: [
         { groupSize: 6, numberOfGroups: 4, description: "4 grupos de 6 manzanas" },
@@ -25,6 +27,7 @@ export const useMultiplicationGame = () => {
     },
     {
       result: 18,
+      itemType: 'crystal' as ItemType,
       story: "Tika encuentra 18 cristales brillantes. Debe agruparlos para mostrar que 3×6 = 3+3+3+3+3+3 = 18",
       groupings: [
         { groupSize: 3, numberOfGroups: 6, description: "6 grupos de 3 cristales" },
@@ -34,6 +37,7 @@ export const useMultiplicationGame = () => {
     },
     {
       result: 20,
+      itemType: 'seed' as ItemType,
       story: "Caós ha esparcido 20 semillas. Ari debe organizarlas para demostrar que 5×4 = 5+5+5+5 = 20",
       groupings: [
         { groupSize: 5, numberOfGroups: 4, description: "4 grupos de 5 semillas" },
@@ -51,12 +55,13 @@ export const useMultiplicationGame = () => {
         groupSize: grouping.groupSize,
         numberOfGroups: grouping.numberOfGroups,
         description: grouping.description,
-        visualItems: Array(grouping.numberOfGroups).fill(grouping.groupSize),
+        placedItems: Array(grouping.numberOfGroups).fill(null).map(() => []), // Initialize empty groups
       }));
 
       return {
         id: `problem-${index + 1}`,
         result: config.result,
+        itemType: config.itemType,
         possibleGroupings: groupingOptions,
         selectedGrouping: null,
         isCompleted: false,
@@ -64,33 +69,18 @@ export const useMultiplicationGame = () => {
       };
     });
 
-    // Generate available items for dragging - Calculate required quantities
-    const requiredValues = new Map<number, number>();
-    
-    problems.forEach(problem => {
-      problem.possibleGroupings.forEach(grouping => {
-        const currentCount = requiredValues.get(grouping.groupSize) || 0;
-        // Each grouping needs enough items to fill all groups
-        requiredValues.set(grouping.groupSize, Math.max(currentCount, grouping.numberOfGroups));
-      });
-    });
-
-    // Add some distractors with lower quantities
-    [1, 2, 7, 11, 12, 15].forEach(val => {
-      if (!requiredValues.has(val)) {
-        requiredValues.set(val, 2); // Only 2 distractors each
-      }
-    });
-    
-    // Generate items with correct quantities
-    const availableItems: DraggableItem[] = [];
+    // Generate available visual items for dragging
+    const availableItems: VisualItem[] = [];
     let itemIndex = 0;
     
-    requiredValues.forEach((quantity, value) => {
-      for (let i = 0; i < quantity; i++) {
+    // For each problem, generate the required items of the specific type
+    problems.forEach(problem => {
+      const totalItemsNeeded = problem.result; // Total items needed for this problem
+      
+      for (let i = 0; i < totalItemsNeeded; i++) {
         availableItems.push({
-          id: `item-${itemIndex}`,
-          value,
+          id: `visual-item-${itemIndex}`,
+          type: problem.itemType,
           isUsed: false,
         });
         itemIndex++;
@@ -123,9 +113,8 @@ export const useMultiplicationGame = () => {
     const grouping = problem.possibleGroupings.find(g => g.id === groupingId);
     if (!grouping) return false;
 
-    // Check if all values match the expected pattern
-    const expectedValues = grouping.visualItems;
-    if (droppedValues.length !== expectedValues.length) return false;
+    // Check if the number of dropped values matches expected number of groups
+    if (droppedValues.length !== grouping.numberOfGroups) return false;
 
     // All dropped values should match the group size
     return droppedValues.every(value => value === grouping.groupSize);
@@ -164,9 +153,10 @@ export const useMultiplicationGame = () => {
       return { success: false, message: 'Problema o agrupación no encontrada' };
     }
 
-    // Check if the dropped value matches the expected group size
-    if (draggedItem.value !== grouping.groupSize) {
-      return { success: false, message: `Este grupo necesita elementos de valor ${grouping.groupSize}` };
+    // For visual items, we don't validate by value but by correct placement
+    // The validation is that the item can be placed in this grouping
+    if (draggedItem.type !== problem.itemType) {
+      return { success: false, message: `Este problema requiere elementos de tipo ${problem.itemType}` };
     }
 
     // Update game state

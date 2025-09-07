@@ -1,8 +1,19 @@
 // Game Types - Representing multiplication as repeated addition and grouping
 
+export type ItemType = 'apple' | 'crystal' | 'seed';
+
+export interface VisualItem {
+  id: string;
+  type: ItemType;
+  isUsed: boolean;
+  groupingId?: string;
+  position?: { group: number; slot: number };
+}
+
 export interface MultiplicationProblem {
   id: string;
   result: number; // e.g., 24
+  itemType: ItemType; // What type of visual objects to use
   possibleGroupings: GroupingOption[]; // Different ways to form groups
   selectedGrouping: GroupingOption | null;
   isCompleted: boolean;
@@ -14,7 +25,7 @@ export interface GroupingOption {
   groupSize: number; // e.g., 6 (items per group)
   numberOfGroups: number; // e.g., 4 (total groups)
   description: string; // e.g., "4 grupos de 6 manzanas cada uno"
-  visualItems: number[]; // Array representing the items to drag [6, 6, 6, 6]
+  placedItems: VisualItem[][]; // 2D array: groups -> items in each group
 }
 
 export interface DraggableItem {
@@ -34,7 +45,7 @@ export interface DropZone {
 
 export interface GameState {
   problems: MultiplicationProblem[];
-  availableItems: DraggableItem[];
+  availableItems: VisualItem[];
   currentProblemIndex: number;
   score: number;
   isLevelCompleted: boolean;

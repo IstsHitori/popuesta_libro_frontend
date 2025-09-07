@@ -1,9 +1,9 @@
 import { useDroppable } from "@dnd-kit/core";
-import type { MultiplicationProblem, GroupingOption, DraggableItem } from "../../../types/game.types";
+import type { MultiplicationProblem, GroupingOption, VisualItem } from "../../../types/game.types";
 
 interface MultiplicationProblemComponentProps {
   problem: MultiplicationProblem;
-  usedItemsForProblem: DraggableItem[];
+  usedItemsForProblem: VisualItem[];
 }
 
 export default function MultiplicationProblemComponent({ 
@@ -48,7 +48,7 @@ export default function MultiplicationProblemComponent({
 interface GroupingZoneProps {
   grouping: GroupingOption;
   problemId: string;
-  usedItems: DraggableItem[];
+  usedItems: VisualItem[];
 }
 
 function GroupingZone({ grouping, problemId, usedItems }: GroupingZoneProps) {
@@ -131,6 +131,9 @@ function GroupDropZone({ id, grouping, hasItem, isCompleted }: GroupDropZoneProp
 function CompletedProblem({ problem }: { problem: MultiplicationProblem }) {
   const grouping = problem.selectedGrouping!;
   
+  // Generate visual representation from placedItems
+  const allItems = grouping.placedItems.flat();
+  
   return (
     <div className="bg-green-500/20 rounded-xl border-2 border-green-400 p-4 min-h-[200px] flex flex-col justify-center">
       <div className="text-center">
@@ -146,9 +149,9 @@ function CompletedProblem({ problem }: { problem: MultiplicationProblem }) {
         
         {/* Visual representation */}
         <div className="flex flex-wrap gap-1 justify-center mb-3">
-          {grouping.visualItems.map((value, index) => (
+          {allItems.map((item, index) => (
             <div key={index} className="bg-green-500 text-white w-10 h-10 rounded flex items-center justify-center text-sm font-bold">
-              {value}
+              {item.type === 'apple' ? '🍎' : item.type === 'crystal' ? '💎' : '🌱'}
             </div>
           ))}
         </div>
@@ -157,7 +160,7 @@ function CompletedProblem({ problem }: { problem: MultiplicationProblem }) {
           {grouping.numberOfGroups} × {grouping.groupSize} = {problem.result}
         </div>
         <div className="text-white/70 text-xs mt-1">
-          {grouping.visualItems.map(v => v).join(' + ')} = {problem.result}
+          {grouping.numberOfGroups} grupos de {grouping.groupSize} = {problem.result}
         </div>
       </div>
     </div>

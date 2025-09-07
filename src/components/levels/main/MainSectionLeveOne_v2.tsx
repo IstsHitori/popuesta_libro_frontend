@@ -4,18 +4,18 @@ import { useState } from "react";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { Link } from "react-router-dom";
 
-import { useMultiplicationGame } from "../../../hooks/game/useMultiplicationGame";
+import { useVisualMultiplicationGame } from "../../../hooks/game/useVisualMultiplicationGame";
 import { useToast } from "../../../hooks/ui/useToast";
-import MultiplicationProblemComponent from "../level-1/MultiplicationProblem";
-import ItemsPool from "../level-1/NumbersPool";
+import VisualMultiplicationProblem from "../level-1/VisualMultiplicationProblem";
+import VisualItemsPool from "../level-1/VisualItemsPool";
 import GameStats from "../level-1/GameStats";
-import DraggableItemComponent from "../level-1/Response";
+import DraggableVisualItem from "../level-1/DraggableVisualItem";
 import { Toast } from "../../ui/Toast";
 
 import tomas_1 from "/tomas/nivel_1.webp";
 
 export default function MainSectionLeveOne() {
-  const { gameState, gameStats, handleDragEnd } = useMultiplicationGame();
+  const { gameState, gameStats, handleDragEnd } = useVisualMultiplicationGame();
   const { toast, showToast, hideToast } = useToast();
   const [activeItem, setActiveItem] = useState<string | null>(null);
   
@@ -109,31 +109,28 @@ export default function MainSectionLeveOne() {
                 {/* Instructions */}
                 <div className="text-center">
                   <h2 className="text-green-400 text-lg sm:text-xl font-bold flex items-center justify-center gap-2 mb-2">
-                    🧩 ¡Forma grupos iguales para resolver cada problema!
+                    🧩 ¡Forma grupos iguales con los objetos!
                   </h2>
                   <p className="text-white/80 text-sm">
-                    Arrastra los números para formar grupos iguales que sumen el resultado mostrado.
+                    Arrastra las manzanas, cristales o semillas para formar grupos iguales que resuelvan cada problema.
                   </p>
                 </div>
 
                 {/* Multiplication Problems - Each problem shows different grouping options */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
                   {gameState.problems.map((problem) => (
-                    <MultiplicationProblemComponent 
+                    <VisualMultiplicationProblem 
                       key={problem.id} 
                       problem={problem}
-                      usedItemsForProblem={gameState.availableItems.filter(item => 
-                        problem.possibleGroupings.some(g => g.id === item.groupingId)
-                      )}
                     />
                   ))}
                 </div>
                 
                 {/* Available Items Pool */}
                 <div className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/20">
-                  <ItemsPool 
+                  <VisualItemsPool 
                     items={gameState.availableItems} 
-                    title="Arrastra estos números para formar grupos"
+                    title="Arrastra estos objetos para formar grupos"
                   />
                 </div>
                 
@@ -142,9 +139,9 @@ export default function MainSectionLeveOne() {
               {/* Drag Overlay */}
               <DragOverlay>
                 {activeDraggedItem && (
-                  <DraggableItemComponent 
+                  <DraggableVisualItem 
                     item={activeDraggedItem} 
-                    isDisabled={true}
+                    isOverlay={true}
                   />
                 )}
               </DragOverlay>

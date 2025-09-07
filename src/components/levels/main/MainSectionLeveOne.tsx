@@ -11,6 +11,7 @@ import NumbersPool from "../level-1/NumbersPool";
 import GameStats from "../level-1/GameStats";
 import DraggableNumberComponent from "../level-1/Response";
 import { Toast } from "../../ui/Toast";
+import type { DraggableItem, VisualItem } from "../../../types/game.types";
 
 import tomas_1 from "/tomas/nivel_1.webp";
 
@@ -18,6 +19,18 @@ export default function MainSectionLeveOne() {
   const { gameState, gameStats, handleDragEnd } = useMultiplicationGame();
   const { toast, showToast, hideToast } = useToast();
   const [activeNumber, setActiveNumber] = useState<string | null>(null);
+  
+  // Function to convert VisualItem[] to DraggableItem[] for compatibility
+  const convertToDraggableItems = (visualItems: VisualItem[]): DraggableItem[] => {
+    return visualItems.map((item, index) => ({
+      id: item.id,
+      value: index + 1, // Assign sequential numbers
+      isUsed: item.isUsed,
+      groupingId: item.groupingId
+    }));
+  };
+
+  const draggableItems = convertToDraggableItems(gameState.availableItems);
   
   const handleDragStart = (event: DragStartEvent) => {
     setActiveNumber(event.active.id as string);
@@ -36,7 +49,7 @@ export default function MainSectionLeveOne() {
   };
 
   const activeDraggedNumber = activeNumber 
-    ? gameState.availableItems.find(item => item.id === activeNumber)
+    ? draggableItems.find(item => item.id === activeNumber)
     : null;
 
 
@@ -150,7 +163,7 @@ export default function MainSectionLeveOne() {
               </div>
               
               {/* Available Numbers Pool */}
-              <NumbersPool items={gameState.availableItems} />
+              <NumbersPool items={draggableItems} />
               
             </div>
 
