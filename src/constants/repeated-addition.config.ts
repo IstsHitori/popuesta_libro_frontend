@@ -77,8 +77,6 @@ export const REPEATED_ADDITION_PROBLEMS: RepeatedAdditionProblem[] = [
 
 export const REPEATED_ADDITION_CONFIG = {
   maxHints: 3,
-  pointsPerCorrectPlacement: 10,
-  pointsPerCompletedProblem: 50,
   coinsPerCorrectPlacement: 1,
   coinsPerIncorrectPlacement: -1,
   animationDuration: 300,

@@ -12,7 +12,7 @@ import DraggableNumberComponent from "./DraggableNumberComponent";
 import NumbersPool from "./NumbersPool";
 import TechCircuit from "./TechCircuit";
 
-import tomas_2 from "/tomas/tomas-2.png";
+import tomas_2 from "/personajes/robot.jpeg";
 import RepeatedAdditionStats from "./RepeatedAdditionStats";
 
 export default function RepeatedAdditionGame() {
@@ -133,19 +133,19 @@ export default function RepeatedAdditionGame() {
               <div className="bg-white/5 backdrop-blur-sm rounded-xl overflow-hidden border border-white/20">
                 <img
                   src={tomas_2}
-                  alt="Tomás aprendiendo suma repetida"
+                  alt="Tomás reparando el robot en el laboratorio"
                   className="w-full h-48 sm:h-56 xl:h-64 object-cover"
                 />
                 <div className="p-4">
                   <h3 className="text-white font-bold text-lg mb-3">La Aventura de Tomás</h3>
                   <p className="text-white/90 text-sm leading-relaxed mb-4">
-                    Tomás llegó al Centro de Tecnología y descubrió máquinas increíbles. El ingeniero le dijo: 
-                    'Estas máquinas calculan multiplicaciones usando circuitos de suma repetida. Si necesitas 3×2, 
-                    la máquina suma 2+2+2=6 usando circuitos eléctricos.'
+                    Tomás entró al Laboratorio de Tecnología y encontró un robot averiado. El científico le explicó: 
+                    'Este robot se repara resolviendo circuitos de suma repetida. Por ejemplo, si necesita 3 sensores 
+                    de 2 unidades cada uno, debes programar 2+2+2=6 para activar su sistema.'
                   </p>
                   <div className="bg-blue-500/20 border border-blue-500/30 rounded-lg p-3">
                     <p className="text-blue-300 text-sm font-semibold">
-                      🔬 "¡Voy a programar circuitos que calculen multiplicaciones automáticamente!"
+                      🤖 "¡Voy a reparar este robot resolviendo todos los circuitos tecnológicos!"
                     </p>
                   </div>
                 </div>
@@ -245,7 +245,7 @@ export default function RepeatedAdditionGame() {
             <div className="xl:col-span-3">
               <div className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/20 p-6">
                 <h3 className="text-white font-bold text-lg mb-4 text-center">
-                  🔧 Programar Circuito de Suma Repetida
+                  🔧 Programar Circuito tecnológico de agrupamientos repetidos
                 </h3>
                 
                 <div className="flex items-center justify-center gap-2 flex-wrap">

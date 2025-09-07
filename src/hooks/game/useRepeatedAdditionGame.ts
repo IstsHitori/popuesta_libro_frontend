@@ -22,7 +22,6 @@ export function useRepeatedAdditionGame() {
       additionBoxes: createAdditionBoxes(initialProblem),
       availableNumbers: createAvailableNumbers(initialProblem),
       isCompleted: false,
-      score: 0,
       completedProblems: 0,
       hintsUsed: 0,
       maxHints: REPEATED_ADDITION_CONFIG.maxHints,
@@ -86,15 +85,9 @@ export function useRepeatedAdditionGame() {
       const allCorrect = newBoxes.every(box => box.isCorrect === true);
       const problemCompleted = allBoxesFilled && allCorrect;
 
-      let newScore = prevState.score;
       let newCompletedProblems = prevState.completedProblems;
 
-      if (isCorrect) {
-        newScore += REPEATED_ADDITION_CONFIG.pointsPerCorrectPlacement;
-      }
-
       if (problemCompleted) {
-        newScore += REPEATED_ADDITION_CONFIG.pointsPerCompletedProblem;
         newCompletedProblems += 1;
       }
 
@@ -102,7 +95,6 @@ export function useRepeatedAdditionGame() {
         ...prevState,
         additionBoxes: newBoxes,
         availableNumbers: newAvailableNumbers,
-        score: newScore,
         completedProblems: newCompletedProblems,
         isCompleted: problemCompleted
       };
@@ -198,13 +190,25 @@ export function useRepeatedAdditionGame() {
   // Reset current problem
   const resetProblem = useCallback(() => {
     const currentProblem = gameState.currentProblem;
+    
+    // Calculate how many correct placements to subtract coins for
+    const correctPlacements = gameState.additionBoxes.filter(box => box.isCorrect === true).length;
+    
+    // Subtract coins for each correct placement that will be reset
+    if (correctPlacements > 0) {
+      subtractCoins(
+        correctPlacements * REPEATED_ADDITION_CONFIG.coinsPerCorrectPlacement, 
+        `Reinicio del circuito: -${correctPlacements} monedas`
+      );
+    }
+    
     setGameState(prevState => ({
       ...prevState,
       additionBoxes: createAdditionBoxes(currentProblem),
       availableNumbers: createAvailableNumbers(currentProblem),
       isCompleted: false
     }));
-  }, [gameState.currentProblem]);
+  }, [gameState.currentProblem, gameState.additionBoxes, subtractCoins]);
 
   // Use hint
   const useHint = useCallback(() => {
@@ -224,7 +228,6 @@ export function useRepeatedAdditionGame() {
       totalProblems: REPEATED_ADDITION_PROBLEMS.length,
       completedProblems: gameState.completedProblems,
       progressPercentage: (gameState.completedProblems / REPEATED_ADDITION_PROBLEMS.length) * 100,
-      score: gameState.score,
       hintsRemaining: gameState.maxHints - gameState.hintsUsed,
       currentProblem: gameState.currentProblem,
       isLevelCompleted: gameState.isLevelCompleted

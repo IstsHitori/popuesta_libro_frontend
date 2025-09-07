@@ -4,7 +4,6 @@ export default function RepeatedAdditionStats({
   totalProblems,
   completedProblems,
   progressPercentage,
-  score,
   hintsRemaining,
   isLevelCompleted
 }: RepeatedAdditionStats) {
@@ -31,12 +30,6 @@ export default function RepeatedAdditionStats({
             <div className="text-lg font-bold text-green-400">{Math.round(progressPercentage)}%</div>
             <div className="text-xs text-white/60">Progreso</div>
           </div>
-        </div>
-
-        {/* Score */}
-        <div className="text-center">
-          <div className="text-2xl font-bold text-yellow-400">{score}</div>
-          <div className="text-xs text-white/60">Puntos</div>
         </div>
 
         {/* Hints */}

@@ -15,7 +15,7 @@ export default function TechCircuit({ boxes, targetResult, isCompleted }: TechCi
     <div className="bg-gray-900/40 backdrop-blur-sm rounded-xl border border-cyan-500/30 p-4 mt-4">
       <h4 className="text-cyan-400 font-bold text-center mb-3 flex items-center justify-center gap-2">
         <span className="text-lg">⚡</span>
-        Circuito Tecnológico de Suma
+        Circuito Tecnológico de agrupamientos repetidos
         <span className="text-lg">⚡</span>
       </h4>
       

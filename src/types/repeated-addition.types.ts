@@ -33,7 +33,6 @@ export interface RepeatedAdditionGameState {
   additionBoxes: AdditionBox[];
   availableNumbers: DraggableNumber[];
   isCompleted: boolean;
-  score: number;
   completedProblems: number;
   hintsUsed: number;
   maxHints: number;
@@ -53,7 +52,6 @@ export interface RepeatedAdditionStats {
   totalProblems: number;
   completedProblems: number;
   progressPercentage: number;
-  score: number;
   hintsRemaining: number;
   currentProblem: RepeatedAdditionProblem;
   isLevelCompleted: boolean;
