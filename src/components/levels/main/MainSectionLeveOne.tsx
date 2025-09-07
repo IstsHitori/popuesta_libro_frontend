@@ -1,20 +1,43 @@
-import DropResponses from "../level-1/DropResponses";
-import Response from "../level-1/Response";
-import { DndContext, type DragEndEvent } from "@dnd-kit/core";
-import tomas_1 from "/tomas/nivel_1.webp";
+import { DndContext, DragOverlay } from "@dnd-kit/core";
+import type { DragStartEvent, DragEndEvent } from "@dnd-kit/core";
+import { useState } from "react";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { Link } from "react-router-dom";
 
-export default function MainSectionLeveOne() {
-  const handleDragEnd = (e: DragEndEvent) => {
-    const { over, active } = e;
+import { useMultiplicationGame } from "../../../hooks/game/useMultiplicationGame";
+import { useToast } from "../../../hooks/ui/useToast";
+import MultiplicationProblemComponent from "../level-1/MultiplicationProblem";
+import NumbersPool from "../level-1/NumbersPool";
+import GameStats from "../level-1/GameStats";
+import DraggableNumberComponent from "../level-1/Response";
+import { Toast } from "../../ui/Toast";
 
-    if (over && over.id) {
-      console.log("valido", active.id);
-    } else {
-      console.log("No valido");
+import tomas_1 from "/tomas/nivel_1.webp";
+
+export default function MainSectionLeveOne() {
+  const { gameState, gameStats, handleDragEnd } = useMultiplicationGame();
+  const { toast, showToast, hideToast } = useToast();
+  const [activeNumber, setActiveNumber] = useState<string | null>(null);
+  
+  const handleDragStart = (event: DragStartEvent) => {
+    setActiveNumber(event.active.id as string);
+  };
+
+  const handleDragEndWrapper = (event: DragEndEvent) => {
+    setActiveNumber(null);
+    const result = handleDragEnd(event);
+    
+    // Show feedback to the user
+    if (result.success) {
+      showToast(result.message || '¡Muy bien!', 'success');
+    } else if (result.message) {
+      showToast(result.message, 'error');
     }
   };
+
+  const activeDraggedNumber = activeNumber 
+    ? gameState.availableItems.find(item => item.id === activeNumber)
+    : null;
 
 
   return (
@@ -92,15 +115,55 @@ export default function MainSectionLeveOne() {
             </h3>
           </div>
 
-          {/* Options container */}
-          <div className="flex justify-center items-center gap-2 sm:gap-3 flex-wrap min-h-[80px] sm:min-h-[100px] p-2 sm:p-3 relative mb-4 sm:mb-6">
-            <DndContext onDragEnd={handleDragEnd}>
-              <div className="w-full lg:w-auto mt-4 lg:mt-0">
-                <DropResponses status="3x3" />
-                <Response />
+          {/* DndContext wrapping the game */}
+          <DndContext 
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEndWrapper}
+          >
+            {/* Game container */}
+            <div className="flex flex-col gap-6 mb-6">
+              
+              {/* Game Stats */}
+              <GameStats 
+                totalProblems={gameStats.totalProblems}
+                completedProblems={gameStats.completedProblems}
+                progressPercentage={gameStats.progressPercentage}
+                isLevelCompleted={gameState.isLevelCompleted}
+              />
+              
+              {/* Multiplication Problems */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                {gameState.problems.map((problem) => {
+                  // Get used items for this specific problem
+                  const usedItemsForProblem = gameState.availableItems.filter(
+                    item => item.isUsed && item.id.includes(problem.id)
+                  );
+                  
+                  return (
+                    <MultiplicationProblemComponent 
+                      key={problem.id} 
+                      problem={problem}
+                      usedItemsForProblem={usedItemsForProblem}
+                    />
+                  );
+                })}
               </div>
-            </DndContext>
-          </div>
+              
+              {/* Available Numbers Pool */}
+              <NumbersPool items={gameState.availableItems} />
+              
+            </div>
+
+            {/* Drag Overlay for better visual feedback */}
+            <DragOverlay>
+              {activeDraggedNumber && (
+                <DraggableNumberComponent 
+                  item={activeDraggedNumber} 
+                  isDisabled={true}
+                />
+              )}
+            </DragOverlay>
+          </DndContext>
 
           <div className="flex justify-center gap-3 sm:gap-5 mt-6 sm:mt-8">
             <Link to={"/app/niveles"} className=" flex items-center p-2 cursor-pointer hover:bg-blue-500/90 transition-all bg-blue-500  text-white text-sm rounded-xl">
@@ -110,6 +173,14 @@ export default function MainSectionLeveOne() {
           </div>
         </div>
       </div>
+      
+      {/* Toast notifications */}
+      <Toast 
+        message={toast.message}
+        type={toast.type}
+        isVisible={toast.isVisible}
+        onClose={hideToast}
+      />
     </article>
   );
 }

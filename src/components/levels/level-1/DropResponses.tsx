@@ -1,16 +1,31 @@
-import { useDroppable } from "@dnd-kit/core";
+import type { MultiplicationProblem } from "../../../types/game.types";
 
-type DropResponsesProps = {
-  status: string;
-};
+interface MultiplicationProblemProps {
+  problem: MultiplicationProblem;
+}
 
-export default function DropResponses({ status }: DropResponsesProps) {
-  const { isOver, setNodeRef } = useDroppable({
-    id: status,
-  });
+export default function MultiplicationProblemComponent({ problem }: MultiplicationProblemProps) {
   return (
-    <div ref={setNodeRef} className="p-2 text-white border-1 border-dashed">
-      Drop responses here - {status}
+    <div className="bg-white/10 rounded-xl border border-white/20 backdrop-blur-sm p-3 min-h-[140px] flex flex-col justify-center">
+      {/* Problem title - compact */}
+      <h4 className="text-white text-sm font-bold mb-3 text-center">
+        {problem.story}
+      </h4>
+      
+      {/* Show the result */}
+      <div className="flex items-center justify-center gap-2 mb-3">
+        <div className="flex items-center justify-center w-16 h-12 bg-green-500 rounded-lg text-white font-bold text-lg">
+          {problem.result}
+        </div>
+      </div>
+      
+      {/* Completion status */}
+      {problem.isCompleted && (
+        <div className="flex items-center justify-center gap-1 text-green-400 font-semibold text-sm">
+          <span>✅</span>
+          <span>¡Correcto!</span>
+        </div>
+      )}
     </div>
   );
 }
