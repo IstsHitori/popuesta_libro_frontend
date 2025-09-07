@@ -44,11 +44,7 @@ export const router = createBrowserRouter([
         element: <LevelOnePage />,
       },
       {
-        path: "niveles/nivel-1",
-        element: <LevelOnePage />,
-      },
-      {
-        path: "niveles/nivel-2",
+        path: "niveles/2",
         element: <LevelTwoPage />,
       },
       {

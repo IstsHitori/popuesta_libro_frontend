@@ -7,11 +7,15 @@ export default function HeaderLevelSection() {
       <BtnLevel
         level={1}
         backgroundImage={BG_IMAGES.FOREST}
-        isCurrent={true}
         isUnlocked={true}
       />
 
-      <BtnLevel level={2} backgroundImage={BG_IMAGES.TECH} />
+      <BtnLevel
+        level={2}
+        backgroundImage={BG_IMAGES.TECH}
+        isCurrent={true}
+        isUnlocked={true}
+      />
 
       <BtnLevel level={3} backgroundImage={BG_IMAGES.CITY} />
 
