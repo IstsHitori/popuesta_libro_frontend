@@ -24,9 +24,9 @@ export const LEVEL_LOADING_CONFIG = {
   },
   level4: {
     levelNumber: 4,
-    levelTitle: "Templo de la Integración",
-    backgroundImage: "/tomas/templo_de_la_integracion.webp",
-    tip: "🔮 En el templo final integrarás todo tu conocimiento. Aquí dominarás las multiplicaciones más complejas del reino matemático.",
+    levelTitle: "Fortaleza de la Ingeniería",
+    backgroundImage: "/tomas/fortaleza-de-la-ingenieria.png",
+    tip: "🏰 En la fortaleza debes seguir el camino dorado resolviendo operaciones con números iguales. ¡Solo la precisión matemática te llevará a la victoria!",
     duration: 3500
   }
 } as const;
