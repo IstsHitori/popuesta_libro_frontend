@@ -11,6 +11,8 @@ import VisualItemsPool from "../level-1/VisualItemsPool";
 import GameStats from "../level-1/GameStats";
 import DraggableVisualItem from "../level-1/DraggableVisualItem";
 import { Toast } from "../../ui/Toast";
+import CoinsDisplay from "../../ui/CoinsDisplay";
+import CoinsFeedback from "../../ui/CoinsFeedback";
 
 import tomas_1 from "/tomas/nivel_1.webp";
 
@@ -96,14 +98,17 @@ export default function MainSectionLeveOne() {
             >
               <div className="space-y-4 h-full">
                 
-                {/* Game Stats with next level button */}
-                <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/20">
-                  <GameStats 
-                    totalProblems={gameStats.totalProblems}
-                    completedProblems={gameStats.completedProblems}
-                    progressPercentage={gameStats.progressPercentage}
-                    isLevelCompleted={gameState.isLevelCompleted}
-                  />
+                {/* Game Stats and Coins */}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                  <div className="lg:col-span-2 bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                    <GameStats 
+                      totalProblems={gameStats.totalProblems}
+                      completedProblems={gameStats.completedProblems}
+                      progressPercentage={gameStats.progressPercentage}
+                      isLevelCompleted={gameState.isLevelCompleted}
+                    />
+                  </div>
+                  <CoinsDisplay showHistory={true} />
                 </div>
                 
                 {/* Instructions */}
@@ -157,6 +162,9 @@ export default function MainSectionLeveOne() {
         isVisible={toast.isVisible}
         onClose={hideToast}
       />
+      
+      {/* Coins feedback */}
+      <CoinsFeedback />
     </div>
   );
 }

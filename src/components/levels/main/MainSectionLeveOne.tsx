@@ -11,6 +11,8 @@ import NumbersPool from "../level-1/NumbersPool";
 import GameStats from "../level-1/GameStats";
 import DraggableNumberComponent from "../level-1/Response";
 import { Toast } from "../../ui/Toast";
+import CoinsDisplay from "../../ui/CoinsDisplay";
+import CoinsFeedback from "../../ui/CoinsFeedback";
 import type { DraggableItem, VisualItem } from "../../../types/game.types";
 
 import tomas_1 from "/tomas/nivel_1.webp";
@@ -136,13 +138,18 @@ export default function MainSectionLeveOne() {
             {/* Game container */}
             <div className="flex flex-col gap-6 mb-6">
               
-              {/* Game Stats */}
-              <GameStats 
-                totalProblems={gameStats.totalProblems}
-                completedProblems={gameStats.completedProblems}
-                progressPercentage={gameStats.progressPercentage}
-                isLevelCompleted={gameState.isLevelCompleted}
-              />
+              {/* Game Stats and Coins */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                <div className="lg:col-span-2">
+                  <GameStats 
+                    totalProblems={gameStats.totalProblems}
+                    completedProblems={gameStats.completedProblems}
+                    progressPercentage={gameStats.progressPercentage}
+                    isLevelCompleted={gameState.isLevelCompleted}
+                  />
+                </div>
+                <CoinsDisplay showHistory={true} />
+              </div>
               
               {/* Multiplication Problems */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -194,6 +201,9 @@ export default function MainSectionLeveOne() {
         isVisible={toast.isVisible}
         onClose={hideToast}
       />
+      
+      {/* Coins feedback */}
+      <CoinsFeedback />
     </article>
   );
 }

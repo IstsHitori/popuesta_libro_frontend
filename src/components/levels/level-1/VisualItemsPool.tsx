@@ -1,30 +1,47 @@
-import type { VisualItem } from "../../../types/game.types";
+import { useState, useMemo } from "react";
+import type { VisualItem, ItemType } from "../../../types/game.types";
 import DraggableVisualItem from "./DraggableVisualItem";
 
 interface VisualItemsPoolProps {
   items: VisualItem[];
   title?: string;
   currentProblemType?: string;
+  onGenerateMore?: (itemType: ItemType, count: number) => void;
 }
 
 export default function VisualItemsPool({ 
   items, 
   title = "Objetos Disponibles",
-  currentProblemType 
+  currentProblemType,
+  onGenerateMore 
 }: VisualItemsPoolProps) {
+  const [expandedTypes, setExpandedTypes] = useState<Record<string, boolean>>({});
+  const ITEMS_PER_TYPE_PREVIEW = 8; // Show only 8 items initially per type
+  
   // Filter items to show only those for the current problem
-  const availableItems = items.filter(item => 
-    !item.isUsed && (!currentProblemType || item.type === currentProblemType)
+  const availableItems = useMemo(() => 
+    items.filter(item => 
+      !item.isUsed && (!currentProblemType || item.type === currentProblemType)
+    ), [items, currentProblemType]
   );
   
   // Group items by type for better visualization
-  const itemsByType = availableItems.reduce((acc, item) => {
-    if (!acc[item.type]) {
-      acc[item.type] = [];
-    }
-    acc[item.type].push(item);
-    return acc;
-  }, {} as Record<string, VisualItem[]>);
+  const itemsByType = useMemo(() => 
+    availableItems.reduce((acc, item) => {
+      if (!acc[item.type]) {
+        acc[item.type] = [];
+      }
+      acc[item.type].push(item);
+      return acc;
+    }, {} as Record<string, VisualItem[]>), [availableItems]
+  );
+
+  const toggleExpanded = (type: string) => {
+    setExpandedTypes(prev => ({
+      ...prev,
+      [type]: !prev[type]
+    }));
+  };
 
   const getTypeDisplayName = (type: string) => {
     switch (type) {
@@ -49,21 +66,52 @@ export default function VisualItemsPool({
       
       {availableItems.length > 0 ? (
         <div className="space-y-4">
-          {Object.entries(itemsByType).map(([type, typeItems]) => (
-            <div key={type} className="space-y-2">
-              <div className="text-white/80 text-sm font-medium">
-                {getTypeDisplayName(type)} ({typeItems.length})
+          {Object.entries(itemsByType).map(([type, typeItems]) => {
+            const isExpanded = expandedTypes[type] || false;
+            const itemsToShow = isExpanded ? typeItems : typeItems.slice(0, ITEMS_PER_TYPE_PREVIEW);
+            const hasMore = typeItems.length > ITEMS_PER_TYPE_PREVIEW;
+            
+            return (
+              <div key={type} className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <div className="text-white/80 text-sm font-medium">
+                    {getTypeDisplayName(type)} ({typeItems.length})
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {hasMore && (
+                      <button
+                        onClick={() => toggleExpanded(type)}
+                        className="text-xs text-blue-400 hover:text-blue-300 transition-colors"
+                      >
+                        {isExpanded ? '🔼 Menos' : '🔽 Más'}
+                      </button>
+                    )}
+                    {onGenerateMore && typeItems.length < 20 && (
+                      <button
+                        onClick={() => onGenerateMore(type as ItemType, 10)}
+                        className="text-xs text-green-400 hover:text-green-300 transition-colors"
+                      >
+                        ➕ Generar más
+                      </button>
+                    )}
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-2 justify-center min-h-[60px] p-2 bg-white/5 rounded-lg border border-white/10">
+                  {itemsToShow.map((item) => (
+                    <DraggableVisualItem 
+                      key={item.id} 
+                      item={item} 
+                    />
+                  ))}
+                  {!isExpanded && hasMore && (
+                    <div className="flex items-center justify-center text-white/50 text-xs bg-white/10 rounded-lg px-3 py-2 border border-white/20">
+                      +{typeItems.length - ITEMS_PER_TYPE_PREVIEW} más
+                    </div>
+                  )}
+                </div>
               </div>
-              <div className="flex flex-wrap gap-2 justify-center min-h-[60px] p-2 bg-white/5 rounded-lg border border-white/10">
-                {typeItems.map((item) => (
-                  <DraggableVisualItem 
-                    key={item.id} 
-                    item={item} 
-                  />
-                ))}
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       ) : (
         <div className="text-center py-8">

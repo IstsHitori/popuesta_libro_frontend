@@ -1,4 +1,7 @@
+import { useCoinsStore } from '../../stores/coins.store';
+
 export default function EarnedItems() {
+  const { coins, totalEarned, totalLost } = useCoinsStore();
   return (
     <div
       className="
@@ -69,6 +72,29 @@ export default function EarnedItems() {
         ></div>
       </div>
 
+      {/* Sección de Monedas */}
+      <div className="mb-[25px]">
+        <h4
+          className="
+            text-center mb-[15px] font-bold
+            shadow-[1px_1px_2px_rgba(0,0,0,0.8)]
+            text-[#ffd700] text-[14px]
+          "
+        >
+          🪙 Monedas del Tesoro
+        </h4>
+        <div className="bg-gradient-to-r from-yellow-500/20 to-amber-500/20 rounded-lg p-3 border border-yellow-500/30">
+          <div className="text-center">
+            <div className="text-yellow-400 text-2xl font-bold mb-1">{coins}</div>
+            <div className="text-yellow-300/80 text-xs mb-2">Monedas Actuales</div>
+            <div className="flex justify-between text-xs">
+              <span className="text-green-400">+{totalEarned}</span>
+              <span className="text-red-400">-{totalLost}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div
         className="
           flex justify-between pt-[20px] border-t-[2px] border-white/20
@@ -108,6 +134,23 @@ export default function EarnedItems() {
             "
           >
             Cristales
+          </span>
+        </div>
+        <div className="text-center flex-1">
+          <span
+            className="
+              block text-yellow-400 text-[20px] font-bold
+              shadow-[1px_1px_2px_rgba(0,0,0,0.8)]
+            "
+          >
+            {coins}
+          </span>
+          <span
+            className="
+              block text-[#cccccc] text-[10px] uppercase tracking-[0.5px] mt-[2px]
+            "
+          >
+            Monedas
           </span>
         </div>
       </div>

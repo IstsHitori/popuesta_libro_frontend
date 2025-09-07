@@ -1,3 +1,4 @@
+import { memo } from "react";
 import type { ItemType } from "../../../types/game.types";
 
 interface VisualItemProps {
@@ -6,7 +7,7 @@ interface VisualItemProps {
   className?: string;
 }
 
-export default function VisualItem({ type, size = 'medium', className = '' }: VisualItemProps) {
+const VisualItem = memo(function VisualItem({ type, size = 'medium', className = '' }: VisualItemProps) {
   const getItemEmoji = () => {
     switch (type) {
       case 'apple':
@@ -73,4 +74,6 @@ export default function VisualItem({ type, size = 'medium', className = '' }: Vi
       <span className="drop-shadow-sm">{getItemEmoji()}</span>
     </div>
   );
-}
+});
+
+export default VisualItem;

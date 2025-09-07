@@ -8,10 +8,12 @@ import type {
   GroupingOption,
   ItemType
 } from '../../types/game.types';
+import { useCoinsStore } from '../../stores/coins.store';
 
 // Following SOLID principles: Single Responsibility Principle
 // This hook only manages game state and logic for multiplication as repeated addition
 export const useMultiplicationGame = () => {
+  const { addCoins, subtractCoins } = useCoinsStore();
   
   // Game configuration - Problems that teach multiplication as repeated addition
   const PROBLEMS_CONFIG = useMemo(() => [
@@ -73,11 +75,15 @@ export const useMultiplicationGame = () => {
     const availableItems: VisualItem[] = [];
     let itemIndex = 0;
     
-    // For each problem, generate the required items of the specific type
+    // For each problem, generate enough items to fill ALL grouping options
     problems.forEach(problem => {
-      const totalItemsNeeded = problem.result; // Total items needed for this problem
+      // Calculate total items needed for all possible groupings combined
+      const totalItemsForAllGroupings = problem.possibleGroupings.reduce((total, grouping) => {
+        return total + (grouping.groupSize * grouping.numberOfGroups);
+      }, 0);
       
-      for (let i = 0; i < totalItemsNeeded; i++) {
+      // Generate ALL the items needed (not just initial count)
+      for (let i = 0; i < totalItemsForAllGroupings; i++) {
         availableItems.push({
           id: `visual-item-${itemIndex}`,
           type: problem.itemType,
@@ -153,11 +159,18 @@ export const useMultiplicationGame = () => {
       return { success: false, message: 'Problema o agrupación no encontrada' };
     }
 
-    // For visual items, we don't validate by value but by correct placement
-    // The validation is that the item can be placed in this grouping
+    // For visual items, validate correct placement and handle coins
     if (draggedItem.type !== problem.itemType) {
-      return { success: false, message: `Este problema requiere elementos de tipo ${problem.itemType}` };
+      // ❌ INCORRECT PLACEMENT: Subtract coins
+      subtractCoins(1, `Colocación incorrecta: ${draggedItem.type} en problema de ${problem.itemType}`);
+      return { 
+        success: false, 
+        message: `❌ -1 🪙 Este problema requiere ${problem.itemType === 'apple' ? 'manzanas 🍎' : problem.itemType === 'crystal' ? 'cristales 💎' : 'semillas 🌱'}, no ${draggedItem.type === 'apple' ? 'manzanas 🍎' : draggedItem.type === 'crystal' ? 'cristales 💎' : 'semillas 🌱'}` 
+      };
     }
+
+    // ✅ CORRECT PLACEMENT: Add coins
+    addCoins(1, `Colocación correcta: ${draggedItem.type} en lugar correcto`);
 
     // Update game state
     const completionResult = { problemCompleted: false, levelCompleted: false };
@@ -173,17 +186,20 @@ export const useMultiplicationGame = () => {
       );
       
       // Check if this grouping is now complete
-      const usedItemsForGrouping = newState.availableItems.filter(
-        item => item.groupingId === groupingId
-      );
+      // Check if ALL groupings for this problem are complete
+      const problem = newState.problems.find(p => p.id === problemId)!;
+      const allGroupingsComplete = problem.possibleGroupings.every(groupingOption => {
+        const itemsForThisGrouping = newState.availableItems.filter(
+          item => item.groupingId === groupingOption.id
+        );
+        return itemsForThisGrouping.length === groupingOption.numberOfGroups;
+      });
       
-      const isGroupingComplete = usedItemsForGrouping.length === grouping.numberOfGroups;
-      
-      if (isGroupingComplete) {
-        // Mark problem as completed with this grouping
+      if (allGroupingsComplete) {
+        // Mark problem as completed when ALL groupings are complete
         newState.problems = prevState.problems.map(p => 
           p.id === problemId 
-            ? { ...p, selectedGrouping: grouping, isCompleted: true }
+            ? { ...p, isCompleted: true }
             : p
         );
         
@@ -215,7 +231,7 @@ export const useMultiplicationGame = () => {
       success: true, 
       message: `¡Bien! Necesitas ${grouping.numberOfGroups - usedItemsCount} grupos más` 
     };
-  }, [gameState.availableItems, gameState.problems]);
+  }, [gameState.availableItems, gameState.problems, addCoins, subtractCoins]);
 
   // Reset game function
   const resetGame = useCallback(() => {
@@ -236,11 +252,33 @@ export const useMultiplicationGame = () => {
     };
   }, [gameState]);
 
+  // Function to generate more items when needed
+  const generateMoreItems = useCallback((itemType: ItemType, count: number) => {
+    setGameState(prevState => {
+      const maxId = Math.max(...prevState.availableItems.map(item => parseInt(item.id.split('-').pop() || '0')));
+      
+      const newItems: VisualItem[] = [];
+      for (let i = 0; i < count; i++) {
+        newItems.push({
+          id: `visual-item-${maxId + 1 + i}`,
+          type: itemType,
+          isUsed: false,
+        });
+      }
+      
+      return {
+        ...prevState,
+        availableItems: [...prevState.availableItems, ...newItems]
+      };
+    });
+  }, []);
+
   return {
     gameState,
     gameStats,
     handleDragEnd,
     resetGame,
     isValidGrouping,
+    generateMoreItems,
   };
 };

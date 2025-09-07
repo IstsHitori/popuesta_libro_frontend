@@ -1,4 +1,5 @@
 import { useDraggable } from "@dnd-kit/core";
+import { memo } from "react";
 import type { VisualItem as VisualItemType } from "../../../types/game.types";
 import VisualItem from "./VisualItem";
 
@@ -7,7 +8,7 @@ interface DraggableVisualItemProps {
   isOverlay?: boolean;
 }
 
-export default function DraggableVisualItem({ 
+const DraggableVisualItem = memo(function DraggableVisualItem({ 
   item, 
   isOverlay = false 
 }: DraggableVisualItemProps) {
@@ -30,9 +31,9 @@ export default function DraggableVisualItem({
       {...listeners}
       {...attributes}
       className={`
-        transition-all duration-200
+        transition-transform duration-200 will-change-transform
         ${isDragging ? 'opacity-50 rotate-12 scale-110' : ''}
-        ${item.isUsed ? 'opacity-30 cursor-not-allowed' : 'cursor-grab active:cursor-grabbing'}
+        ${item.isUsed ? 'opacity-30 cursor-not-allowed' : 'cursor-grab active:cursor-grabbing hover:scale-105'}
         ${isOverlay ? 'rotate-12 scale-110' : ''}
       `}
     >
@@ -46,4 +47,6 @@ export default function DraggableVisualItem({
       />
     </div>
   );
-}
+});
+
+export default DraggableVisualItem;

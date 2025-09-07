@@ -8,9 +8,11 @@ import type {
   GroupingOption,
   ItemType
 } from '../../types/game.types';
+import { useCoinsStore } from '../../stores/coins.store';
 
 // Hook for visual multiplication game with objects instead of numbers
 export const useVisualMultiplicationGame = () => {
+  const { addCoins, subtractCoins } = useCoinsStore();
   
   // Game configuration - Problems that teach multiplication through visual grouping
   const PROBLEMS_CONFIG = useMemo(() => [
@@ -72,11 +74,15 @@ export const useVisualMultiplicationGame = () => {
     const availableItems: VisualItem[] = [];
     let itemIndex = 0;
     
-    // For each problem, generate the required items of the specific type
+    // For each problem, generate enough items to fill ALL grouping options
     problems.forEach(problem => {
-      const totalItemsNeeded = problem.result; // Total items needed for this problem
+      // Calculate total items needed for all possible groupings combined
+      const totalItemsForAllGroupings = problem.possibleGroupings.reduce((total, grouping) => {
+        return total + (grouping.groupSize * grouping.numberOfGroups);
+      }, 0);
       
-      for (let i = 0; i < totalItemsNeeded; i++) {
+      // Generate ALL the items needed (not just initial count)
+      for (let i = 0; i < totalItemsForAllGroupings; i++) {
         availableItems.push({
           id: `visual-item-${problem.itemType}-${itemIndex}`,
           type: problem.itemType,
@@ -148,14 +154,20 @@ export const useVisualMultiplicationGame = () => {
       return { success: false, message: 'Problema o agrupación no encontrada' };
     }
 
-    // Check if the item type matches the problem's item type
+    // Check if the item type matches the problem's item type and handle coins
     if (draggedItem.type !== problem.itemType) {
-      const itemName = problem.itemType === 'apple' ? 'manzanas' : problem.itemType === 'crystal' ? 'cristales' : 'semillas';
+      // ❌ INCORRECT PLACEMENT: Subtract coins
+      subtractCoins(1, `Colocación incorrecta: ${draggedItem.type} en problema de ${problem.itemType}`);
+      const itemName = problem.itemType === 'apple' ? 'manzanas 🍎' : problem.itemType === 'crystal' ? 'cristales 💎' : 'semillas 🌱';
+      const draggedItemName = draggedItem.type === 'apple' ? 'manzanas 🍎' : draggedItem.type === 'crystal' ? 'cristales 💎' : 'semillas 🌱';
       return { 
         success: false, 
-        message: `Solo puedes colocar ${itemName} en este problema`
+        message: `❌ -1 🪙 Solo puedes colocar ${itemName} en este problema, no ${draggedItemName}`
       };
     }
+
+    // ✅ CORRECT PLACEMENT: Add coins
+    addCoins(1, `Colocación correcta: ${draggedItem.type} en lugar correcto`);
 
     // Check if this group already has enough items
     if (grouping.placedItems[groupIndex]?.length >= grouping.groupSize) {
@@ -195,15 +207,16 @@ export const useVisualMultiplicationGame = () => {
             return g;
           });
           
-          const updatedGrouping = updatedGroupings.find(g => g.id === groupingId)!;
-          const isComplete = isGroupingCompleted(updatedGrouping);
+          // Check if ALL groupings for this problem are complete
+          const allGroupingsComplete = updatedGroupings.every(grouping => 
+            isGroupingCompleted(grouping)
+          );
           
-          if (isComplete) {
+          if (allGroupingsComplete) {
             completionResult.problemCompleted = true;
             return { 
               ...p, 
               possibleGroupings: updatedGroupings,
-              selectedGrouping: updatedGrouping, 
               isCompleted: true 
             };
           }
@@ -242,7 +255,7 @@ export const useVisualMultiplicationGame = () => {
         ? `¡Bien! Necesitas ${remainingInGroup} elementos más en este grupo`
         : '¡Grupo completo! Continúa con los otros grupos'
     };
-  }, [gameState, isGroupingCompleted]);
+  }, [gameState, isGroupingCompleted, addCoins, subtractCoins]);
 
   // Reset game function
   const resetGame = useCallback(() => {
