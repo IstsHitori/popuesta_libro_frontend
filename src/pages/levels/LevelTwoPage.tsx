@@ -1,4 +1,5 @@
 
+import EarnedItems from "@/components/levels/EarnedItems";
 import HeaderLevelSection from "@/components/levels/HeaderLevelSection";
 import LevelLoadingScreen from "@/components/levels/LevelLoadingScreen";
 import { useLevelLoading } from "@/hooks/ui/useLevelLoading";
@@ -20,7 +21,14 @@ export default function LevelTwoPage() {
   return (
     <div className="min-h-screen">
       <HeaderLevelSection />
-      <RepeatedAdditionGame />
+      <div className="flex">
+        <div className="flex-1">
+          <RepeatedAdditionGame />
+        </div>
+        <div className="hidden xl:block w-80">
+          <EarnedItems />
+        </div>
+      </div>
     </div>
   );
 }

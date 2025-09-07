@@ -3,74 +3,74 @@ import type { RepeatedAdditionProblem } from '../types/repeated-addition.types';
 export const REPEATED_ADDITION_PROBLEMS: RepeatedAdditionProblem[] = [
   {
     id: 'problem-1',
-    title: 'Canastas de Huevos',
-    description: 'Tomás tiene 3 canastas y en cada una coloca 2 huevos. ¿Cuántos huevos hay en total?',
+    title: 'Circuito de LEDs',
+    description: 'Tomás programa 3 filas de LEDs y cada fila necesita 2 componentes. ¿Cuántos componentes necesita en total?',
     targetResult: 6,
     correctNumber: 2,
     repetitions: 3,
     availableNumbers: [2, 2, 2, 3, 1, 4], // 3 doses correctos + distractores
     difficulty: 'easy',
-    hint: 'Coloca el número 2 en cada una de las 3 cajas para sumar 2+2+2=6',
+    hint: 'Programa el circuito: coloca el componente 2 en cada una de las 3 conexiones para obtener 2+2+2=6',
     isCompleted: false
   },
   {
     id: 'problem-2',
-    title: 'Flores del Jardín',
-    description: 'En el jardín hay 4 macetas y en cada una crecen 3 flores. ¿Cuántas flores hay en total?',
+    title: 'Sensores Robóticos',
+    description: 'El robot tiene 4 extremidades y cada una lleva 3 sensores. ¿Cuántos sensores instalar en total?',
     targetResult: 12,
     correctNumber: 3,
     repetitions: 4,
     availableNumbers: [3, 3, 3, 3, 2, 4, 6], // 4 treses correctos + distractores
     difficulty: 'easy',
-    hint: 'Necesitas poner el 3 en las 4 cajas: 3+3+3+3=12',
+    hint: 'Sistema de sensores: programa 3 sensores en las 4 extremidades: 3+3+3+3=12',
     isCompleted: false
   },
   {
     id: 'problem-3',
-    title: 'Libros en Estantes',
-    description: 'La biblioteca tiene 5 estantes y en cada uno hay 2 libros. ¿Cuántos libros hay en total?',
+    title: 'Servidores de Datos',
+    description: 'El centro de datos tiene 5 racks y cada rack procesa 2 terabytes. ¿Cuántos terabytes en total?',
     targetResult: 10,
     correctNumber: 2,
     repetitions: 5,
     availableNumbers: [2, 2, 2, 2, 2, 1, 3, 5], // 5 doses correctos + distractores
     difficulty: 'medium',
-    hint: 'Usa el número 2 cinco veces: 2+2+2+2+2=10',
+    hint: 'Capacidad del sistema: configura 2 terabytes en los 5 racks: 2+2+2+2+2=10',
     isCompleted: false
   },
   {
     id: 'problem-4',
-    title: 'Ruedas de Bicicletas',
-    description: 'En el taller hay 3 bicicletas y cada una tiene 2 ruedas. ¿Cuántas ruedas hay en total?',
+    title: 'Drones de Vigilancia',
+    description: 'La estación controla 3 drones y cada uno tiene 2 cámaras. ¿Cuántas cámaras monitorean?',
     targetResult: 6,
     correctNumber: 2,
     repetitions: 3,
     availableNumbers: [2, 2, 2, 1, 3, 6], // 3 doses correctos + distractores
     difficulty: 'easy',
-    hint: 'Cada bicicleta tiene 2 ruedas, así que 2+2+2=6',
+    hint: 'Red de vigilancia: instala 2 cámaras en los 3 drones: 2+2+2=6',
     isCompleted: false
   },
   {
     id: 'problem-5',
-    title: 'Patas de Perros',
-    description: 'En el parque hay 4 perros y cada uno tiene 4 patas. ¿Cuántas patas hay en total?',
+    title: 'Motores Cuadcopter',
+    description: 'En el laboratorio hay 4 cuadcópteros y cada uno tiene 4 motores. ¿Cuántos motores en total?',
     targetResult: 16,
     correctNumber: 4,
     repetitions: 4,
     availableNumbers: [4, 4, 4, 4, 2, 8, 1], // 4 cuatros correctos + distractores
     difficulty: 'medium',
-    hint: 'Cada perro tiene 4 patas: 4+4+4+4=16',
+    hint: 'Sistema de vuelo: programa 4 motores en los 4 cuadcópteros: 4+4+4+4=16',
     isCompleted: false
   },
   {
     id: 'problem-6',
-    title: 'Dedos de las Manos',
-    description: 'Tomás cuenta 6 manos y cada mano tiene 5 dedos. ¿Cuántos dedos hay en total?',
+    title: 'Microprocesadores',
+    description: 'El supercomputador tiene 6 módulos y cada módulo lleva 5 microprocesadores. ¿Cuántos chips total?',
     targetResult: 30,
     correctNumber: 5,
     repetitions: 6,
     availableNumbers: [5, 5, 5, 5, 5, 5, 3, 6, 10], // 6 cincos correctos + distractores
     difficulty: 'hard',
-    hint: 'Cada mano tiene 5 dedos: 5+5+5+5+5+5=30',
+    hint: 'Arquitectura del sistema: instala 5 microprocesadores en los 6 módulos: 5+5+5+5+5+5=30',
     isCompleted: false
   }
 ];

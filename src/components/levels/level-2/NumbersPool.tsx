@@ -39,7 +39,7 @@ export default function NumbersPool({ numbers, title = "Números Disponibles" }:
         
         {numbers.length === 0 && (
           <div className="text-center text-white/50 py-4">
-            No hay números disponibles
+            🔧 No hay componentes disponibles en el laboratorio
           </div>
         )}
       </div>
@@ -47,11 +47,11 @@ export default function NumbersPool({ numbers, title = "Números Disponibles" }:
       {/* Helper text */}
       <div className="mt-3 text-center">
         <p className="text-white/70 text-sm">
-          Arrastra los números a las cajas para formar la suma
+          🔧 Arrastra los componentes a los circuitos para programar la suma
         </p>
         {usedNumbers.length > 0 && (
           <p className="text-white/50 text-xs mt-1">
-            💡 Puedes arrastrar números de vuelta aquí para reutilizarlos
+            💡 Puedes devolver componentes al laboratorio para reutilizarlos
           </p>
         )}
       </div>

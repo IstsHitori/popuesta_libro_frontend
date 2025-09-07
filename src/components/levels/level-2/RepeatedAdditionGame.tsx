@@ -10,9 +10,10 @@ import CoinsDisplay from "../../ui/CoinsDisplay";
 import AdditionBoxComponent from "./AdditionBoxComponent";
 import DraggableNumberComponent from "./DraggableNumberComponent";
 import NumbersPool from "./NumbersPool";
-import RepeatedAdditionStats from "./RepeatedAdditionStats";
+import TechCircuit from "./TechCircuit";
 
 import tomas_2 from "/tomas/tomas-2.png";
+import RepeatedAdditionStats from "./RepeatedAdditionStats";
 
 export default function RepeatedAdditionGame() {
   const { 
@@ -51,7 +52,7 @@ export default function RepeatedAdditionGame() {
       if (boxWithNumber) {
         const result = handleNumberRemoval(boxWithNumber.id);
         if (result.success) {
-          showToast(result.message || 'Número devuelto al pool', 'success');
+          showToast('🔧 Componente devuelto al laboratorio', 'success');
         }
       }
       return;
@@ -63,19 +64,19 @@ export default function RepeatedAdditionGame() {
       
       if (result.success) {
         if (result.isCompletedProblem) {
-          showToast(`¡Problema completado! ${gameState.currentProblem.correctNumber} × ${gameState.currentProblem.repetitions} = ${gameState.currentProblem.targetResult}`, 'success');
+          showToast(`🎯 ¡Circuito Activado! ${gameState.currentProblem.correctNumber} × ${gameState.currentProblem.repetitions} = ${gameState.currentProblem.targetResult}`, 'success');
         } else if (result.message) {
           showToast(result.message, result.isCorrectPlacement ? 'success' : 'error');
         }
       } else {
-        showToast(result.message || 'No se puede colocar aquí', 'error');
+        showToast(result.message || 'Componente incompatible con este circuito', 'error');
       }
     }
   };
 
   const handleNextProblem = () => {
     nextProblem();
-    showToast('¡Nuevo problema cargado!', 'success');
+    showToast('🔧 ¡Nuevo circuito tecnológico cargado!', 'success');
   };
 
   const handleUseHint = () => {
@@ -104,10 +105,10 @@ export default function RepeatedAdditionGame() {
           </Link>
           <div className="flex items-center gap-3">
             <h1 className="text-white text-xl sm:text-2xl font-bold">
-              Suma Repetida
+              Laboratorio Tecnológico
             </h1>
             <span className="px-3 py-1 bg-blue-500/20 text-blue-400 rounded-full text-sm font-bold border border-blue-500/30">
-              Nivel 2
+              Nivel 2 - Centro de Tecnología
             </span>
           </div>
           <div className="ml-auto">
@@ -138,12 +139,13 @@ export default function RepeatedAdditionGame() {
                 <div className="p-4">
                   <h3 className="text-white font-bold text-lg mb-3">La Aventura de Tomás</h3>
                   <p className="text-white/90 text-sm leading-relaxed mb-4">
-                    Tomás descubrió que la multiplicación es suma repetida. Su mamá le enseñó: 
-                    'Si tienes 3 grupos de 2 objetos, puedes sumar 2+2+2=6, que es lo mismo que 3×2=6.'
+                    Tomás llegó al Centro de Tecnología y descubrió máquinas increíbles. El ingeniero le dijo: 
+                    'Estas máquinas calculan multiplicaciones usando circuitos de suma repetida. Si necesitas 3×2, 
+                    la máquina suma 2+2+2=6 usando circuitos eléctricos.'
                   </p>
-                  <div className="bg-green-500/20 border border-green-500/30 rounded-lg p-3">
-                    <p className="text-green-300 text-sm font-semibold">
-                      🧮 "¡Ahora entiendo! La multiplicación es sumar el mismo número varias veces!"
+                  <div className="bg-blue-500/20 border border-blue-500/30 rounded-lg p-3">
+                    <p className="text-blue-300 text-sm font-semibold">
+                      🔬 "¡Voy a programar circuitos que calculen multiplicaciones automáticamente!"
                     </p>
                   </div>
                 </div>
@@ -200,27 +202,40 @@ export default function RepeatedAdditionGame() {
                 <div className="flex flex-col gap-2">
                   <button
                     onClick={handleUseHint}
-                    disabled={gameStats.hintsRemaining === 0}
+                    disabled={gameStats.hintsRemaining === 0 || gameState.isCompleted}
                     className="w-full bg-blue-500 hover:bg-blue-600 disabled:bg-gray-500 text-white px-4 py-2 rounded-lg transition-colors text-sm"
                   >
                     💡 Usar Pista ({gameStats.hintsRemaining})
                   </button>
                   
-                  <button
-                    onClick={resetProblem}
-                    className="w-full bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors text-sm"
-                  >
-                    🔄 Reiniciar
-                  </button>
+                  {/* Only show reset button if problem is NOT completed */}
+                  {!gameState.isCompleted && (
+                    <button
+                      onClick={resetProblem}
+                      className="w-full bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors text-sm"
+                    >
+                      🔄 Reiniciar Circuito
+                    </button>
+                  )}
                   
-                  {gameState.isCompleted && (
+                  {/* Next problem button */}
+                  {gameState.isCompleted && !gameStats.isLevelCompleted && (
                     <button
                       onClick={handleNextProblem}
-                      disabled={gameState.currentProblemIndex >= gameStats.totalProblems - 1}
-                      className="w-full bg-green-500 hover:bg-green-600 disabled:bg-gray-500 text-white px-4 py-2 rounded-lg transition-colors text-sm"
+                      className="w-full bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors text-sm"
                     >
-                      ➡️ Siguiente Problema
+                      ➡️ Siguiente Circuito
                     </button>
+                  )}
+
+                  {/* Next level button */}
+                  {gameStats.isLevelCompleted && (
+                    <Link
+                      to="/app/niveles/nivel-3"
+                      className="w-full bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg transition-colors text-sm text-center block"
+                    >
+                      🚀 Avanzar al Siguiente Nivel
+                    </Link>
                   )}
                 </div>
               </div>
@@ -230,7 +245,7 @@ export default function RepeatedAdditionGame() {
             <div className="xl:col-span-3">
               <div className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/20 p-6">
                 <h3 className="text-white font-bold text-lg mb-4 text-center">
-                  Completa la suma repetida
+                  🔧 Programar Circuito de Suma Repetida
                 </h3>
                 
                 <div className="flex items-center justify-center gap-2 flex-wrap">
@@ -244,25 +259,58 @@ export default function RepeatedAdditionGame() {
                   ))}
                 </div>
 
+                {/* Tech Circuit Display */}
+                <TechCircuit 
+                  boxes={gameState.additionBoxes}
+                  targetResult={gameState.currentProblem.targetResult}
+                  isCompleted={gameState.isCompleted}
+                />
+
                 {/* Progress indicator */}
                 <div className="mt-6 text-center">
                   <div className="text-white/70 text-sm mb-2">
-                    Progreso: {gameState.additionBoxes.filter(box => box.currentNumber !== null).length} / {gameState.additionBoxes.length}
+                    🔌 Conexiones del Circuito: {gameState.additionBoxes.filter(box => box.currentNumber !== null).length} / {gameState.additionBoxes.length}
                   </div>
-                  <div className="w-full bg-white/20 rounded-full h-2">
+                  <div className="w-full bg-gray-700/50 rounded-full h-3 border border-cyan-500/30">
                     <div 
-                      className="bg-green-500 h-2 rounded-full transition-all duration-300"
+                      className={`
+                        h-3 rounded-full transition-all duration-500
+                        ${gameState.isCompleted 
+                          ? 'bg-gradient-to-r from-green-500 to-cyan-400 animate-pulse shadow-lg shadow-green-500/50' 
+                          : 'bg-gradient-to-r from-cyan-500 to-blue-500'
+                        }
+                      `}
                       style={{ 
                         width: `${(gameState.additionBoxes.filter(box => box.currentNumber !== null).length / gameState.additionBoxes.length) * 100}%` 
                       }}
                     />
                   </div>
+                  {gameState.isCompleted && (
+                    <div className="text-green-400 text-xs mt-1 animate-pulse">
+                      ⚡ Sistema Operativo - Circuito Activado
+                    </div>
+                  )}
                 </div>
 
                 {gameState.isCompleted && (
                   <div className="mt-4 text-center p-4 bg-green-500/20 border border-green-500/30 rounded-lg">
                     <p className="text-green-300 font-bold">
-                      ¡Excelente! {gameState.currentProblem.correctNumber} × {gameState.currentProblem.repetitions} = {gameState.currentProblem.targetResult}
+                      ⚡ ¡Circuito Activado! {gameState.currentProblem.correctNumber} × {gameState.currentProblem.repetitions} = {gameState.currentProblem.targetResult}
+                    </p>
+                    <p className="text-green-200 text-sm mt-1">
+                      🔧 La máquina tecnológica calculó: {Array(gameState.currentProblem.repetitions).fill(gameState.currentProblem.correctNumber).join(' + ')} = {gameState.currentProblem.targetResult}
+                    </p>
+                  </div>
+                )}
+
+                {/* Level completion message */}
+                {gameStats.isLevelCompleted && (
+                  <div className="mt-4 text-center p-4 bg-purple-500/20 border border-purple-500/30 rounded-lg">
+                    <p className="text-purple-300 font-bold text-lg">
+                      🎉 ¡Centro de Tecnología Completado!
+                    </p>
+                    <p className="text-purple-200 text-sm mt-1">
+                      Has dominado todos los circuitos de suma repetida. ¡Hora de avanzar al siguiente nivel!
                     </p>
                   </div>
                 )}
@@ -273,7 +321,7 @@ export default function RepeatedAdditionGame() {
           {/* Available Numbers */}
           <NumbersPool 
             numbers={gameState.availableNumbers}
-            title="Números Disponibles"
+            title="🔢 Componentes Numéricos del Laboratorio"
           />
 
           {/* Drag Overlay */}
