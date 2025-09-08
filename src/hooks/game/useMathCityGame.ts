@@ -7,9 +7,11 @@ import type {
 } from '../../types/math-city.types';
 import { MATH_CITY_PROBLEMS, MATH_CITY_CONFIG } from '../../constants/math-city.config';
 import { useCoinsStore } from '../../stores/coins.store';
+import { useEarnedItemsStore } from '../../stores/earned-items.store';
 
 export function useMathCityGame() {
   const { addCoins, subtractCoins } = useCoinsStore();
+  const { completeLevel } = useEarnedItemsStore();
 
   const [gameState, setGameState] = useState<MathCityGameState>(() => {
     const initialProblem = MATH_CITY_PROBLEMS[0];
@@ -162,8 +164,11 @@ export function useMathCityGame() {
         ...prevState,
         isLevelCompleted: true
       }));
+      
+      // Completar el nivel 3 y ganar recompensas
+      completeLevel(3);
     }
-  }, [gameState.currentProblemIndex]);
+  }, [gameState.currentProblemIndex, completeLevel]);
 
   // Reset current problem
   const resetProblem = useCallback(() => {

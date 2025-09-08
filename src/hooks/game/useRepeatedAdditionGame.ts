@@ -9,9 +9,11 @@ import type {
 } from '../../types/repeated-addition.types';
 import { REPEATED_ADDITION_PROBLEMS, REPEATED_ADDITION_CONFIG } from '../../constants/repeated-addition.config';
 import { useCoinsStore } from '../../stores/coins.store';
+import { useEarnedItemsStore } from '../../stores/earned-items.store';
 
 export function useRepeatedAdditionGame() {
   const { addCoins, subtractCoins } = useCoinsStore();
+  const { completeLevel } = useEarnedItemsStore();
 
   const [gameState, setGameState] = useState<RepeatedAdditionGameState>(() => {
     const initialProblem = REPEATED_ADDITION_PROBLEMS[0];
@@ -184,8 +186,11 @@ export function useRepeatedAdditionGame() {
         ...prevState,
         isLevelCompleted: true
       }));
+      
+      // Completar el nivel 2 y ganar recompensas
+      completeLevel(2);
     }
-  }, [gameState.currentProblemIndex]);
+  }, [gameState.currentProblemIndex, completeLevel]);
 
   // Reset current problem
   const resetProblem = useCallback(() => {

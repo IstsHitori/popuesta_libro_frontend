@@ -1,7 +1,17 @@
 import { useCoinsStore } from '../../stores/coins.store';
+import { useEarnedItemsStore } from '../../stores/earned-items.store';
 
 export default function EarnedItems() {
   const { coins, totalEarned, totalLost } = useCoinsStore();
+  const { 
+    getAllEarnedGarments, 
+    getAllEarnedCrystals, 
+    getEarnedItemsCount 
+  } = useEarnedItemsStore();
+
+  const earnedGarments = getAllEarnedGarments();
+  const earnedCrystals = getAllEarnedCrystals();
+  const { garments: garmentCount, crystals: crystalCount } = getEarnedItemsCount();
   return (
     <div
       className="
@@ -51,7 +61,36 @@ export default function EarnedItems() {
             flex flex-col gap-[15px] items-center
           "
           id="premios-prendas-sidebar"
-        ></div>
+        >
+          {earnedGarments.length === 0 ? (
+            <div className="text-white/50 text-sm text-center py-4">
+              🎯 Completa niveles para ganar prendas
+            </div>
+          ) : (
+            earnedGarments.map((garment) => (
+              <div
+                key={garment.id}
+                className="
+                  w-16 h-16 rounded-lg border-2 border-yellow-500/50 
+                  bg-gradient-to-br from-yellow-500/20 to-amber-600/20
+                  flex items-center justify-center relative overflow-hidden
+                  hover:border-yellow-400 transition-all duration-300
+                  shadow-lg hover:shadow-yellow-500/25
+                "
+                title={garment.name}
+              >
+                <img
+                  src={garment.image}
+                  alt={garment.name}
+                  className="w-12 h-12 object-contain"
+                />
+                <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border border-white flex items-center justify-center">
+                  <span className="text-white text-xs">✓</span>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
       </div>
 
       <div className="mb-[25px]">
@@ -69,7 +108,39 @@ export default function EarnedItems() {
             flex flex-col gap-[15px] items-center
           "
           id="premios-cristales-sidebar"
-        ></div>
+        >
+          {earnedCrystals.length === 0 ? (
+            <div className="text-white/50 text-sm text-center py-4">
+              💎 Completa niveles para ganar cristales
+            </div>
+          ) : (
+            earnedCrystals.map((crystal) => (
+              <div
+                key={crystal.id}
+                className={`
+                  w-16 h-16 rounded-lg border-2 
+                  ${crystal.color === 'red' ? 'border-red-500/50 bg-gradient-to-br from-red-500/20 to-red-600/20' : ''}
+                  ${crystal.color === 'yellow' ? 'border-yellow-500/50 bg-gradient-to-br from-yellow-500/20 to-yellow-600/20' : ''}
+                  ${crystal.color === 'gray' ? 'border-gray-500/50 bg-gradient-to-br from-gray-500/20 to-gray-600/20' : ''}
+                  ${crystal.color === 'green' ? 'border-green-500/50 bg-gradient-to-br from-green-500/20 to-green-600/20' : ''}
+                  flex items-center justify-center relative overflow-hidden
+                  hover:border-opacity-75 transition-all duration-300
+                  shadow-lg hover:shadow-lg
+                `}
+                title={crystal.name}
+              >
+                <img
+                  src={crystal.image}
+                  alt={crystal.name}
+                  className="w-12 h-12 object-contain"
+                />
+                <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border border-white flex items-center justify-center">
+                  <span className="text-white text-xs">✓</span>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
       </div>
 
       {/* Sección de Monedas */}
@@ -108,7 +179,7 @@ export default function EarnedItems() {
             "
             id="prendas-count"
           >
-            0
+            {garmentCount}
           </span>
           <span
             className="
@@ -126,7 +197,7 @@ export default function EarnedItems() {
             "
             id="cristales-count"
           >
-            0
+            {crystalCount}
           </span>
           <span
             className="

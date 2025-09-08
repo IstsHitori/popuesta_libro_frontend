@@ -2,9 +2,11 @@ import { useState, useCallback, useMemo } from 'react';
 import type { FortressGameState, FortressStats } from '../../types/fortress.types';
 import { createFortressProblem, generateEqualNumberOptions, validateEqualNumbers, evaluateExpression } from '../../constants/fortress.config';
 import { useCoinsStore } from '../../stores/coins.store';
+import { useEarnedItemsStore } from '../../stores/earned-items.store';
 
 export const useFortressGame = () => {
   const { addCoins, subtractCoins } = useCoinsStore();
+  const { completeLevel } = useEarnedItemsStore();
   
   const [gameState, setGameState] = useState<FortressGameState>(() => {
     const initialProblem = createFortressProblem();
@@ -52,6 +54,9 @@ export const useFortressGame = () => {
       
       // Verificar si hemos completado todos los pasos
       if (nextStep >= currentMatrix.totalSteps) {
+        // Completar el nivel 4 y ganar recompensas
+        completeLevel(4);
+        
         return {
           ...prevState,
           isLevelCompleted: true
@@ -95,7 +100,7 @@ export const useFortressGame = () => {
         }
       };
     });
-  }, []);
+  }, [completeLevel]);
 
   const selectOption = useCallback((optionId: string) => {
     const selectedOption = gameState.currentProblem.options.find(opt => opt.id === optionId);
