@@ -99,21 +99,34 @@ export const createFortressMatrix = (): FortressMatrix => {
   const rows = 6;
   const cols = 8;
   
-  // Definir el camino dorado manualmente
+  // Definir un camino más interesante y serpenteante
   const pathCoordinates = [
-    { row: 0, col: 0, value: 16 },   // Inicio
-    { row: 0, col: 1, value: 12 },
-    { row: 1, col: 1, value: 9 },
-    { row: 1, col: 2, value: 15 },
-    { row: 1, col: 3, value: 18 },
-    { row: 2, col: 3, value: 21 },
-    { row: 2, col: 4, value: 24 },
-    { row: 3, col: 4, value: 20 },
-    { row: 3, col: 5, value: 14 },
-    { row: 4, col: 5, value: 10 },
-    { row: 4, col: 6, value: 8 },
-    { row: 5, col: 6, value: 6 },
-    { row: 5, col: 7, value: 4 }    // Final
+    { row: 0, col: 0, value: 16 },   // Inicio - esquina superior izquierda
+    { row: 0, col: 1, value: 12 },   // Derecha
+    { row: 0, col: 2, value: 9 },    // Derecha
+    { row: 0, col: 3, value: 15 },   // Derecha
+    { row: 1, col: 3, value: 18 },   // Abajo
+    { row: 2, col: 3, value: 21 },   // Abajo
+    { row: 2, col: 4, value: 24 },   // Derecha
+    { row: 2, col: 5, value: 20 },   // Derecha
+    { row: 1, col: 5, value: 14 },   // Arriba (giro)
+    { row: 0, col: 5, value: 10 },   // Arriba
+    { row: 0, col: 6, value: 8 },    // Derecha
+    { row: 1, col: 6, value: 6 },    // Abajo
+    { row: 2, col: 6, value: 25 },   // Abajo
+    { row: 3, col: 6, value: 22 },   // Abajo
+    { row: 3, col: 5, value: 18 },   // Izquierda
+    { row: 4, col: 5, value: 12 },   // Abajo
+    { row: 4, col: 4, value: 16 },   // Izquierda
+    { row: 5, col: 4, value: 9 },    // Abajo
+    { row: 5, col: 3, value: 15 },   // Izquierda
+    { row: 5, col: 2, value: 6 },    // Izquierda
+    { row: 4, col: 2, value: 21 },   // Arriba
+    { row: 3, col: 2, value: 8 },    // Arriba
+    { row: 3, col: 1, value: 12 },   // Izquierda
+    { row: 4, col: 1, value: 4 },    // Abajo
+    { row: 5, col: 1, value: 10 },   // Abajo
+    { row: 5, col: 0, value: 14 },   // Izquierda - llegada en esquina inferior izquierda
   ];
   
   // Crear la matriz con números aleatorios
@@ -157,8 +170,8 @@ export const createFortressProblem = (): FortressProblem => {
   
   return {
     id: 'fortress_main',
-    title: 'Entrada de la Fortaleza',
-    description: 'Encuentra el camino correcto a través de la fortaleza resolviendo las operaciones',
+    title: 'El Acertijo de Caos',
+    description: 'Derrota las trampas matemáticas de Caos usando solo agrupamientos repetidos para cruzar el puente',
     matrix,
     currentTarget,
     options: generateEqualNumberOptions(currentTarget),

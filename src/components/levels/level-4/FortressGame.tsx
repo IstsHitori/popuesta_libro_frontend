@@ -54,27 +54,61 @@ export default function FortressGame() {
 
   if (gameState.isLevelCompleted) {
     return (
-      <div className="w-full min-h-screen overflow-auto bg-gradient-to-br from-amber-900/20 via-orange-900/20 to-yellow-900/20 p-4">
-        <div className="container mx-auto max-w-4xl flex items-center justify-center min-h-screen">
-          <div className="bg-white/95 rounded-3xl p-8 text-center shadow-2xl border-4 border-amber-400">
-            <img src={tomas_ganador} alt="Tomas conquistador" className="w-32 h-32 mx-auto mb-4" />
-            <h2 className="text-3xl font-bold text-amber-800 mb-4">
-              🏰 ¡Fortaleza Conquistada! 🏰
-            </h2>
-            <p className="text-amber-700 mb-6 text-lg">
-              ¡Increíble trabajo, Tomás! Has navegado exitosamente a través de todos los caminos de la fortaleza. 
-              Tu dominio de las operaciones matemáticas te ha llevado a la victoria.
-            </p>
-            <FortressStatsComponent 
-              {...gameStats}
-            />
-            <div className="flex gap-4 justify-center mt-6">
-              <Link 
-                to="/app/niveles" 
-                className="px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white rounded-xl font-semibold transition-colors shadow-lg"
-              >
-                🏠 Volver al mapa
-              </Link>
+      <div className="w-full min-h-screen overflow-auto bg-gradient-to-br from-amber-900/20 via-orange-900/20 to-yellow-900/20 p-4 relative">
+        {/* Partículas de celebración en el fondo */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-10 left-10 w-2 h-2 bg-yellow-400 rounded-full animate-bounce opacity-70"></div>
+          <div className="absolute top-20 right-20 w-3 h-3 bg-amber-500 rounded-full animate-pulse opacity-60"></div>
+          <div className="absolute bottom-32 left-16 w-2 h-2 bg-orange-400 rounded-full animate-ping opacity-50"></div>
+          <div className="absolute bottom-20 right-32 w-2 h-2 bg-yellow-300 rounded-full animate-bounce opacity-80"></div>
+          <div className="absolute top-1/3 left-1/4 w-1 h-1 bg-amber-400 rounded-full animate-pulse opacity-60"></div>
+          <div className="absolute top-2/3 right-1/3 w-2 h-2 bg-orange-300 rounded-full animate-ping opacity-70"></div>
+        </div>
+
+        <div className="container mx-auto max-w-4xl flex items-center justify-center min-h-screen relative z-10">
+          <div className="bg-gradient-to-br from-amber-800/90 via-orange-800/90 to-yellow-800/90 backdrop-blur-xl rounded-3xl p-8 text-center shadow-2xl border-4 border-amber-400/50 relative overflow-hidden">
+            
+            {/* Efectos decorativos en el fondo de la tarjeta */}
+            <div className="absolute inset-0 bg-gradient-to-r from-amber-500/10 via-transparent to-orange-500/10 rounded-3xl"></div>
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-amber-400 to-transparent"></div>
+            <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-orange-400 to-transparent"></div>
+            
+            <div className="relative z-10">
+              <img src={tomas_ganador} alt="Ari conquistadora" className="w-32 h-32 mx-auto mb-4 drop-shadow-lg" />
+              
+              <h2 className="text-4xl font-bold text-amber-100 mb-2 drop-shadow-lg">
+                🏰 ¡Fortaleza Conquistada! 🏰
+              </h2>
+              
+              <div className="w-20 h-1 bg-gradient-to-r from-amber-400 to-orange-400 mx-auto mb-6 rounded-full"></div>
+              
+              <p className="text-amber-200 mb-8 text-lg leading-relaxed drop-shadow-sm max-w-2xl mx-auto">
+                ¡Increíble trabajo, Ari! Has navegado exitosamente a través de todos los caminos de la fortaleza. 
+                Tu dominio de las operaciones matemáticas te ha llevado a la victoria total.
+              </p>
+              
+              <div className="bg-black/20 backdrop-blur-sm rounded-2xl p-6 mb-8 border border-amber-500/30">
+                <FortressStatsComponent 
+                  {...gameStats}
+                />
+              </div>
+              
+              <div className="flex gap-4 justify-center">
+                <Link 
+                  to="/app/niveles" 
+                  className="px-8 py-4 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center gap-2"
+                >
+                  🏠 Volver al mapa
+                </Link>
+              </div>
+              
+              {/* Mensaje motivacional adicional */}
+              <div className="mt-6 p-4 bg-gradient-to-r from-emerald-500/20 to-teal-500/20 rounded-xl border border-emerald-400/30">
+                <p className="text-emerald-200 text-sm font-medium">
+                  🎖️ ¡Has demostrado ser un verdadero maestro de las matemáticas! 
+                  La fortaleza ha sido conquistada con precisión y sabiduría.
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -116,23 +150,30 @@ export default function FortressGame() {
                 <div className="bg-white/5 backdrop-blur-sm rounded-xl overflow-hidden border border-white/20">
                   <img
                     src="/tomas/fortaleza-de-la-ingenieria.png"
-                    alt="Tomás explorando la fortaleza"
+                    alt="Ari explorando la fortaleza"
                     className="w-full h-48 sm:h-56 xl:h-64 object-cover"
                     onError={(e) => {
                       e.currentTarget.src = "/tomas/tomas-3.png";
                     }}
                   />
                   <div className="p-4">
-                    <h3 className="text-white font-bold text-lg mb-3">El camino de la fortaleza</h3>
+                    <h3 className="text-white font-bold text-lg mb-3">El desafío de Caos</h3>
                     <p className="text-white/90 text-sm leading-relaxed mb-4">
-                      Tomás llegó a la antigua Fortaleza de la Ingeniería. El guardián le explicó: 
-                      'Para atravesar esta fortaleza debes seguir el camino dorado resolviendo operaciones. 
-                      Cada celda del camino tiene un número objetivo, y debes elegir la operación correcta 
-                      que da ese resultado.'
+                      Cuando Ari se acercó al puente que llevaba a la Fortaleza de la Ingeniería, una sombra 
+                      siniestra apareció bloqueando su camino. Era <strong>Caos</strong>, el villano que había 
+                      aterrorizado el reino matemático. Con una sonrisa malévola, Caos declaró: 
+                      "¡Para cruzar mi puente y entrar a la fortaleza, debes resolver mi acertijo más diabólico! 
+                      Solo los agrupamientos repetidos te permitirán avanzar por el camino dorado, ¡si es que puedes!"
                     </p>
+                    <div className="bg-red-500/20 border border-red-500/30 rounded-lg p-3 mb-3">
+                      <p className="text-red-300 text-sm font-semibold">
+                        👹 <strong>Caos:</strong> "¡Muajaja! ¿Crees que puedes derrotar mis trampas matemáticas, pequeña Ari?"
+                      </p>
+                    </div>
                     <div className="bg-amber-500/20 border border-amber-500/30 rounded-lg p-3">
                       <p className="text-amber-300 text-sm font-semibold">
-                        🏰 "¡Voy a conquistar esta fortaleza paso a paso con mis conocimientos matemáticos!"
+                        🏰 <strong>Ari:</strong> "¡Acepto tu desafío, Caos! Con mis conocimientos de agrupamientos 
+                        repetidos cruzaré tu puente y conquistaré la fortaleza!"
                       </p>
                     </div>
                   </div>

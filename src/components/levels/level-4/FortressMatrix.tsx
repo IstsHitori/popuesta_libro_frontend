@@ -16,29 +16,55 @@ export default function FortressMatrixComponent({ matrix }: FortressMatrixProps)
       
       <div className="grid grid-cols-8 gap-1 p-4 bg-amber-900/20 rounded-xl border-2 border-amber-500/30">
         {matrix.grid.map((row, rowIndex) =>
-          row.map((cell, colIndex) => (
-            <div
-              key={`${rowIndex}-${colIndex}`}
-              className={`
-                aspect-square flex items-center justify-center text-sm font-bold rounded-lg border-2 transition-all duration-300
-                ${cell.isPath 
-                  ? cell.isCurrentPosition
-                    ? 'bg-yellow-400 text-yellow-900 border-yellow-600 shadow-lg animate-pulse scale-110' // Posición actual
-                    : cell.isCompleted
-                    ? 'bg-green-400 text-green-900 border-green-600 shadow-md' // Completado
-                    : 'bg-amber-300 text-amber-900 border-amber-500 shadow-sm' // Camino disponible
-                  : 'bg-gray-600 text-gray-300 border-gray-500' // No es parte del camino
-                }
-              `}
-            >
-              {cell.value}
-            </div>
-          ))
+          row.map((cell, colIndex) => {
+            const isStart = rowIndex === 0 && colIndex === 0; // Inicio del camino
+            const isEnd = rowIndex === 5 && colIndex === 0; // Final del camino
+            
+            return (
+              <div
+                key={`${rowIndex}-${colIndex}`}
+                className={`
+                  aspect-square flex items-center justify-center text-sm font-bold rounded-lg border-2 transition-all duration-300 relative
+                  ${cell.isPath 
+                    ? cell.isCurrentPosition
+                      ? 'bg-yellow-400 text-yellow-900 border-yellow-600 shadow-lg animate-pulse scale-110' // Posición actual
+                      : cell.isCompleted
+                      ? 'bg-green-400 text-green-900 border-green-600 shadow-md' // Completado
+                      : isStart
+                      ? 'bg-emerald-400 text-emerald-900 border-emerald-600 shadow-md' // Inicio
+                      : isEnd
+                      ? 'bg-purple-400 text-purple-900 border-purple-600 shadow-md' // Final
+                      : 'bg-amber-300 text-amber-900 border-amber-500 shadow-sm' // Camino disponible
+                    : 'bg-gray-600 text-gray-300 border-gray-500' // No es parte del camino
+                  }
+                `}
+              >
+                {/* Iconos especiales para inicio y final */}
+                {isStart && (
+                  <div className="absolute -top-1 -right-1 w-4 h-4 bg-emerald-600 rounded-full flex items-center justify-center">
+                    <span className="text-white text-xs">🚀</span>
+                  </div>
+                )}
+                {isEnd && (
+                  <div className="absolute -top-1 -right-1 w-4 h-4 bg-purple-600 rounded-full flex items-center justify-center">
+                    <span className="text-white text-xs">🏆</span>
+                  </div>
+                )}
+                {cell.value}
+              </div>
+            );
+          })
         )}
       </div>
       
       <div className="mt-4 flex items-center justify-between text-sm">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 flex-wrap">
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 bg-emerald-400 rounded border border-emerald-600 relative">
+              <span className="absolute -top-0.5 -right-0.5 text-xs">🚀</span>
+            </div>
+            <span className="text-white/90">Inicio</span>
+          </div>
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 bg-yellow-400 rounded border border-yellow-600"></div>
             <span className="text-white/90">Actual</span>
@@ -50,6 +76,12 @@ export default function FortressMatrixComponent({ matrix }: FortressMatrixProps)
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 bg-amber-300 rounded border border-amber-500"></div>
             <span className="text-white/90">Camino</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 bg-purple-400 rounded border border-purple-600 relative">
+              <span className="absolute -top-0.5 -right-0.5 text-xs">🏆</span>
+            </div>
+            <span className="text-white/90">Meta</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 bg-gray-600 rounded border border-gray-500"></div>
