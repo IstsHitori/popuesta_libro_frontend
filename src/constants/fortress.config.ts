@@ -1,6 +1,167 @@
 import type { FortressProblem, FortressMatrix, FortressOption, MatrixCell } from '../types/fortress.types';
 
-// Función para generar opciones con números iguales solamente
+// Función para generar opciones mixtas (agrupamientos repetidos vs expresiones variadas)
+export const generateMixedOptions = (target: number): FortressOption[] => {
+  // Decidir el tipo de pregunta aleatoriamente
+  const questionType = Math.random() < 0.5 ? 'all_repetitions' : 'mixed';
+  
+  if (questionType === 'all_repetitions') {
+    // Todas las opciones son agrupamientos repetidos, pero solo una es correcta
+    return generateAllRepetitionOptions(target);
+  } else {
+    // Mezcla: algunas repeticiones (una correcta) + algunas expresiones variadas
+    return generateMixedRepetitionOptions(target);
+  }
+};
+
+// Generar 5 opciones donde todas son agrupamientos repetidos
+const generateAllRepetitionOptions = (target: number): FortressOption[] => {
+  const options: FortressOption[] = [];
+  
+  // Buscar divisores del número objetivo
+  const divisors = [];
+  for (let i = 1; i <= target; i++) {
+    if (target % i === 0 && (target / i) >= 2 && (target / i) <= 6) {
+      divisors.push(i);
+    }
+  }
+  
+  // Si no hay suficientes divisores, agregar algunos que no den el resultado exacto
+  const allOptions = [...divisors];
+  
+  // Agregar opciones incorrectas (números que repetidos no den el target)
+  for (let num = 1; num <= 8; num++) {
+    for (let count = 2; count <= 6; count++) {
+      if (num * count !== target && !allOptions.includes(num)) {
+        allOptions.push(num);
+      }
+    }
+  }
+  
+  // Crear la opción correcta
+  if (divisors.length > 0) {
+    const correctDivisor = divisors[Math.floor(Math.random() * divisors.length)];
+    const correctCount = target / correctDivisor;
+    options.push({
+      id: `correct_${target}`,
+      expression: Array(correctCount).fill(correctDivisor).join(' + '),
+      result: target,
+      isCorrect: true
+    });
+  }
+  
+  // Crear opciones incorrectas (todas agrupamientos repetidos)
+  const usedNumbers = new Set([divisors[0]]);
+  while (options.length < 5) {
+    const randomNum = Math.floor(Math.random() * 8) + 1;
+    if (usedNumbers.has(randomNum)) continue;
+    
+    const randomCount = Math.floor(Math.random() * 4) + 2; // 2-5 repeticiones
+    const result = randomNum * randomCount;
+    
+    if (result !== target) {
+      options.push({
+        id: `incorrect_${options.length}_${target}`,
+        expression: Array(randomCount).fill(randomNum).join(' + '),
+        result: result,
+        isCorrect: false
+      });
+      usedNumbers.add(randomNum);
+    }
+  }
+  
+  // Mezclar opciones
+  for (let i = options.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [options[i], options[j]] = [options[j], options[i]];
+  }
+  
+  return options;
+};
+
+// Generar opciones mixtas: algunas repeticiones + algunas variadas
+const generateMixedRepetitionOptions = (target: number): FortressOption[] => {
+  const options: FortressOption[] = [];
+  
+  // Buscar divisores para la opción correcta repetida
+  const divisors = [];
+  for (let i = 1; i <= target; i++) {
+    if (target % i === 0 && (target / i) >= 2 && (target / i) <= 6) {
+      divisors.push(i);
+    }
+  }
+  
+  // Crear la opción correcta (agrupamiento repetido)
+  if (divisors.length > 0) {
+    const correctDivisor = divisors[Math.floor(Math.random() * divisors.length)];
+    const correctCount = target / correctDivisor;
+    options.push({
+      id: `correct_${target}`,
+      expression: Array(correctCount).fill(correctDivisor).join(' + '),
+      result: target,
+      isCorrect: true
+    });
+  } else {
+    // Si no hay divisores buenos, crear una opción variada correcta
+    options.push({
+      id: `correct_${target}`,
+      expression: `${target - 1} + 1`,
+      result: target,
+      isCorrect: true
+    });
+  }
+  
+  // Agregar 2-3 opciones repetidas incorrectas
+  const usedNumbers = new Set();
+  for (let i = 0; i < 3 && options.length < 4; i++) {
+    const randomNum = Math.floor(Math.random() * 8) + 1;
+    if (usedNumbers.has(randomNum)) continue;
+    
+    const randomCount = Math.floor(Math.random() * 4) + 2;
+    const result = randomNum * randomCount;
+    
+    if (result !== target) {
+      options.push({
+        id: `incorrect_rep_${i}_${target}`,
+        expression: Array(randomCount).fill(randomNum).join(' + '),
+        result: result,
+        isCorrect: false
+      });
+      usedNumbers.add(randomNum);
+    }
+  }
+  
+  // Completar con opciones variadas incorrectas
+  const incorrectTargets = [target - 2, target - 1, target + 1, target + 2].filter(r => r > 0);
+  
+  while (options.length < 5 && incorrectTargets.length > 0) {
+    const wrongTarget = incorrectTargets.shift()!;
+    const expressions = [
+      `${wrongTarget - 1} + 1`,
+      `${Math.floor(wrongTarget / 2)} + ${Math.ceil(wrongTarget / 2)}`,
+      `${wrongTarget - 3} + 2 + 1`,
+      `1 + 2 + ${wrongTarget - 3}`
+    ];
+    
+    const randomExpression = expressions[Math.floor(Math.random() * expressions.length)];
+    options.push({
+      id: `incorrect_var_${options.length}_${target}`,
+      expression: randomExpression,
+      result: wrongTarget,
+      isCorrect: false
+    });
+  }
+  
+  // Mezclar opciones
+  for (let i = options.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [options[i], options[j]] = [options[j], options[i]];
+  }
+  
+  return options;
+};
+
+// Función para generar opciones con números iguales solamente (mantener compatibilidad)
 export const generateEqualNumberOptions = (target: number): FortressOption[] => {
   const options: FortressOption[] = [];
   
@@ -171,10 +332,10 @@ export const createFortressProblem = (): FortressProblem => {
   return {
     id: 'fortress_main',
     title: 'El Acertijo de Caos',
-    description: 'Derrota las trampas matemáticas de Caos usando solo agrupamientos repetidos para cruzar el puente',
+    description: 'Derrota las trampas matemáticas de Caos encontrando la expresión correcta para cruzar el puente',
     matrix,
     currentTarget,
-    options: generateEqualNumberOptions(currentTarget),
+    options: generateMixedOptions(currentTarget),
     difficulty: 'medium'
   };
 };

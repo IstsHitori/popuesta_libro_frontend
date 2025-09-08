@@ -1,6 +1,6 @@
 import { useState, useCallback, useMemo } from 'react';
 import type { FortressGameState, FortressStats } from '../../types/fortress.types';
-import { createFortressProblem, generateEqualNumberOptions, validateEqualNumbers, evaluateExpression } from '../../constants/fortress.config';
+import { createFortressProblem, generateMixedOptions, evaluateExpression } from '../../constants/fortress.config';
 import { useCoinsStore } from '../../stores/coins.store';
 import { useLevelCompletion } from '../../hooks/levels/useLevelCompletion';
 
@@ -88,7 +88,7 @@ export const useFortressGame = () => {
       };
 
       const newTarget = nextPosition.value;
-      const newOptions = generateEqualNumberOptions(newTarget);
+      const newOptions = generateMixedOptions(newTarget);
 
       return {
         ...prevState,
@@ -109,28 +109,12 @@ export const useFortressGame = () => {
       return { success: false, message: 'Opción no encontrada' };
     }
 
-    // Validar que la expresión use solo números iguales
-    const hasEqualNumbers = validateEqualNumbers(selectedOption.expression);
+    // Validar que el resultado sea correcto
     const calculatedResult = evaluateExpression(selectedOption.expression);
     const isCorrectResult = calculatedResult === gameState.currentProblem.currentTarget;
 
-    if (!hasEqualNumbers) {
-      // Penalizar por usar números diferentes
-      subtractCoins(1);
-      setStats(prev => ({
-        ...prev,
-        incorrectAnswers: prev.incorrectAnswers + 1,
-        coinsLost: prev.coinsLost + 1
-      }));
-      
-      return { 
-        success: false, 
-        message: '❌ ¡Error! Debes usar solo números iguales en la operación. Se descontó 1 moneda.' 
-      };
-    }
-
     if (!isCorrectResult) {
-      // Respuesta incorrecta pero con números iguales
+      // Penalizar por respuesta incorrecta
       subtractCoins(1);
       setStats(prev => ({
         ...prev,
