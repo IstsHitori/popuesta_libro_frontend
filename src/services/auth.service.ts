@@ -30,6 +30,8 @@ export const getUserProfile = async () => {
       console.error(result.error);
       throw new Error("Error al parsear los datos");
     }
+    console.log(result.data);
+
     return result.data;
   } catch (error) {
     if (isAxiosError(error)) {
