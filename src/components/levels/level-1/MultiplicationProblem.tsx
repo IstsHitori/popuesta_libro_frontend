@@ -67,7 +67,7 @@ function GroupingZone({ grouping, problemId, usedItems }: GroupingZoneProps) {
           {grouping.description}
         </span>
         <div className="text-white/70 text-xs mt-1">
-          {grouping.numberOfGroups} × {grouping.groupSize} = {grouping.numberOfGroups * grouping.groupSize}
+          {grouping.numberOfGroups} × {grouping.groupSize}
         </div>
       </div>
       
@@ -157,7 +157,7 @@ function CompletedProblem({ problem }: { problem: MultiplicationProblem }) {
         </div>
         
         <div className="text-white/90 text-sm">
-          {grouping.numberOfGroups} × {grouping.groupSize} = {problem.result}
+          {grouping.numberOfGroups} × {grouping.groupSize}
         </div>
         <div className="text-white/70 text-xs mt-1">
           {grouping.numberOfGroups} grupos de {grouping.groupSize} = {problem.result}

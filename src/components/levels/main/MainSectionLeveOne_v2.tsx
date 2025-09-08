@@ -100,7 +100,7 @@ export default function MainSectionLeveOne() {
               onDragStart={handleDragStart}
               onDragEnd={handleDragEndWrapper}
             >
-              <div className="space-y-4 h-full">
+              <div className="space-y-4 h-full pb-20"> {/* Added pb-20 for floating pool space */}
                 
                 {/* Game Stats and Coins */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -136,11 +136,11 @@ export default function MainSectionLeveOne() {
                 </div>
                 
                 {/* Available Items Pool - Floating Version */}
-                <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-40 max-w-4xl w-[90%]">
+                <div className="fixed bottom-4 right-4 z-40 max-w-sm w-96">
                   <div className="bg-black/90 backdrop-blur-lg rounded-xl border-2 border-white/30 shadow-2xl">
                     <VisualItemsPool 
                       items={gameState.availableItems} 
-                      title="🎯 Arrastra estos objetos para formar grupos"
+                      title="🎯 Objetos"
                       isFloating={true}
                     />
                   </div>

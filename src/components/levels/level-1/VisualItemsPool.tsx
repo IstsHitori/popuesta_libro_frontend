@@ -18,8 +18,8 @@ export default function VisualItemsPool({
   isFloating = false
 }: VisualItemsPoolProps) {
   const [expandedTypes, setExpandedTypes] = useState<Record<string, boolean>>({});
-  const [isMinimized, setIsMinimized] = useState(false);
-  const ITEMS_PER_TYPE_PREVIEW = isFloating ? 6 : 8; // Show fewer items when floating
+  const [isMinimized, setIsMinimized] = useState(false); // Don't start minimized to show all items
+  const ITEMS_PER_TYPE_PREVIEW = isFloating ? 6 : 8; // Show more items when floating
   
   // Filter items to show only those for the current problem
   const availableItems = useMemo(() => 
@@ -58,11 +58,11 @@ export default function VisualItemsPool({
   return (
     <div className={`
       ${isFloating 
-        ? 'bg-black/95 backdrop-blur-lg border-2 border-white/40 p-3 shadow-2xl' 
+        ? 'bg-black/95 backdrop-blur-lg border-2 border-white/40 p-3 shadow-2xl h-auto' 
         : 'bg-white/10 backdrop-blur-sm border border-white/20 p-4'
       } 
       rounded-xl transition-all duration-300 relative
-      ${isFloating ? 'max-h-48 overflow-y-auto' : ''}
+      ${isMinimized && isFloating ? 'max-h-12 overflow-hidden' : ''}
     `}>
       <div className="flex items-center justify-between mb-3">
         <h3 className={`text-white font-semibold flex items-center gap-2 ${isFloating ? 'text-base' : 'text-lg'}`}>
