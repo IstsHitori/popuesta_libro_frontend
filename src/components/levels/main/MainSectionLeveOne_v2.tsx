@@ -59,7 +59,7 @@ export default function MainSectionLeveOne() {
           </Link>
           <div className="flex items-center gap-3">
             <h1 className="text-white text-xl sm:text-2xl font-bold">
-              El reto del mercado de café
+              El reto del bosque
             </h1>
             <span className="px-3 py-1 bg-yellow-500/20 text-yellow-400 rounded-full text-sm font-bold border border-yellow-500/30">
               Nivel 1

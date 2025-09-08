@@ -27,7 +27,7 @@ export default function VisualGroupingZone({
           {grouping.description}
         </span>
         <div className="text-white/70 text-xs mt-1">
-          {grouping.numberOfGroups} × {grouping.groupSize} = {grouping.numberOfGroups * grouping.groupSize}
+          {grouping.numberOfGroups} × {grouping.groupSize}
         </div>
       </div>
       

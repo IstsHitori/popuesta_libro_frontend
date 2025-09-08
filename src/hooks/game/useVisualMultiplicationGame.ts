@@ -244,7 +244,7 @@ export const useVisualMultiplicationGame = () => {
     });
 
     if (completionResult.problemCompleted) {
-      const calculation = `${grouping.numberOfGroups} × ${grouping.groupSize} = ${grouping.numberOfGroups * grouping.groupSize}`;
+      const calculation = `${grouping.numberOfGroups} × ${grouping.groupSize}`;
       return { 
         success: true, 
         message: `¡Excelente! Has formado ${grouping.description}. ${calculation}`, 

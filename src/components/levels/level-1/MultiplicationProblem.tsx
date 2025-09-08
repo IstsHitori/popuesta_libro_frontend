@@ -160,7 +160,7 @@ function CompletedProblem({ problem }: { problem: MultiplicationProblem }) {
           {grouping.numberOfGroups} × {grouping.groupSize}
         </div>
         <div className="text-white/70 text-xs mt-1">
-          {grouping.numberOfGroups} grupos de {grouping.groupSize} = {problem.result}
+          {grouping.numberOfGroups} grupos de {grouping.groupSize}
         </div>
       </div>
     </div>
