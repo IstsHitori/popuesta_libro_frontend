@@ -1,10 +1,12 @@
 import { useCoinsStore } from '../../stores/coins.store';
 import useUserProfile from '@/hooks/profile/useUserProfile';
+import { useLevelCompletion } from '@/hooks/levels/useLevelCompletion';
 import type { UserEarnedItems } from '@/types/user.type';
 
 export default function EarnedItems() {
   const { coins, totalEarned, totalLost } = useCoinsStore();
   const { userProfile } = useUserProfile();
+  const { isCompletingLevel } = useLevelCompletion();
 
   // Separar items por tipo desde el perfil del usuario
   const userItems = userProfile?.items || [];
@@ -13,12 +15,6 @@ export default function EarnedItems() {
   
   const garmentCount = earnedGarments.length;
   const crystalCount = earnedCrystals.length;
-
-  // Debug logs
-  console.log('User Profile:', userProfile);
-  console.log('User Items:', userItems);
-  console.log('Earned Garments:', earnedGarments);
-  console.log('Earned Crystals:', earnedCrystals);
 
   // Mapear items a imágenes (puedes ajustar estas rutas según tu estructura)
   const getItemImage = (itemName: string, itemType: string) => {
@@ -43,21 +39,21 @@ export default function EarnedItems() {
       return '/tomas/premios/prendas/cinturon.webp'; // Default
     } else {
       if (name.includes('rojo') || name.includes('red')) {
-        return '/tomas/premios/cristales/cristal rojo.webp';
+        return '/tomas/premios/cristales/cristal-rojo.webp';
       }
       if (name.includes('amarillo') || name.includes('yellow')) {
-        return '/tomas/premios/cristales/cristal amarillo.webp';
+        return '/tomas/premios/cristales/cristal-amarillo.webp';
       }
       if (name.includes('gris') || name.includes('gray') || name.includes('grey')) {
-        return '/tomas/premios/cristales/cristal gris.webp';
+        return '/tomas/premios/cristales/cristal-gris.webp';
       }
       if (name.includes('verde') || name.includes('green')) {
-        return '/tomas/premios/cristales/cristal verde.webp';
+        return '/tomas/premios/cristales/cristal-verde.webp';
       }
       if (name.includes('azul') || name.includes('blue')) {
-        return '/tomas/premios/cristales/cristal azul.webp';
+        return '/tomas/premios/cristales/cristal-azul.webp';
       }
-      return '/tomas/premios/cristales/cristal rojo.webp'; // Default
+      return '/tomas/premios/cristales/cristal-rojo.webp'; // Default
     }
   };
 
@@ -103,6 +99,11 @@ export default function EarnedItems() {
         >
           ¡Colecciona todo el traje de aventurero!
         </p>
+        {isCompletingLevel && (
+          <div className="mt-2 text-yellow-400 text-xs animate-pulse">
+            💾 Guardando progreso...
+          </div>
+        )}
       </div>
 
       <div className="mb-[25px]">

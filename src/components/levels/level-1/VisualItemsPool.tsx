@@ -7,16 +7,19 @@ interface VisualItemsPoolProps {
   title?: string;
   currentProblemType?: string;
   onGenerateMore?: (itemType: ItemType, count: number) => void;
+  isFloating?: boolean;
 }
 
 export default function VisualItemsPool({ 
   items, 
   title = "Objetos Disponibles",
   currentProblemType,
-  onGenerateMore 
+  onGenerateMore,
+  isFloating = false
 }: VisualItemsPoolProps) {
   const [expandedTypes, setExpandedTypes] = useState<Record<string, boolean>>({});
-  const ITEMS_PER_TYPE_PREVIEW = 8; // Show only 8 items initially per type
+  const [isMinimized, setIsMinimized] = useState(false);
+  const ITEMS_PER_TYPE_PREVIEW = isFloating ? 6 : 8; // Show fewer items when floating
   
   // Filter items to show only those for the current problem
   const availableItems = useMemo(() => 
@@ -53,87 +56,112 @@ export default function VisualItemsPool({
   };
 
   return (
-    <div className="bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 p-4">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-white text-lg font-semibold flex items-center gap-2">
+    <div className={`
+      ${isFloating 
+        ? 'bg-black/95 backdrop-blur-lg border-2 border-white/40 p-3 shadow-2xl' 
+        : 'bg-white/10 backdrop-blur-sm border border-white/20 p-4'
+      } 
+      rounded-xl transition-all duration-300 relative
+      ${isFloating ? 'max-h-48 overflow-y-auto' : ''}
+    `}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-white font-semibold flex items-center gap-2 ${isFloating ? 'text-base' : 'text-lg'}`}>
           <span>🎒</span>
           {title}
         </h3>
-        <div className="text-white/60 text-sm">
-          {availableItems.length} disponible{availableItems.length !== 1 ? 's' : ''}
+        <div className="flex items-center gap-2">
+          {isFloating && (
+            <button
+              onClick={() => setIsMinimized(!isMinimized)}
+              className="text-white/70 hover:text-white transition-colors text-sm"
+              title={isMinimized ? "Expandir" : "Minimizar"}
+            >
+              {isMinimized ? '🔼' : '🔽'}
+            </button>
+          )}
+          <div className={`text-white/60 ${isFloating ? 'text-xs' : 'text-sm'}`}>
+            {availableItems.length} disponible{availableItems.length !== 1 ? 's' : ''}
+          </div>
         </div>
       </div>
       
-      {availableItems.length > 0 ? (
-        <div className="space-y-4">
-          {Object.entries(itemsByType).map(([type, typeItems]) => {
-            const isExpanded = expandedTypes[type] || false;
-            const itemsToShow = isExpanded ? typeItems : typeItems.slice(0, ITEMS_PER_TYPE_PREVIEW);
-            const hasMore = typeItems.length > ITEMS_PER_TYPE_PREVIEW;
-            
-            return (
-              <div key={type} className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <div className="text-white/80 text-sm font-medium">
-                    {getTypeDisplayName(type)} ({typeItems.length})
-                  </div>
-                  <div className="flex items-center gap-2">
-                    {hasMore && (
-                      <button
-                        onClick={() => toggleExpanded(type)}
-                        className="text-xs text-blue-400 hover:text-blue-300 transition-colors"
-                      >
-                        {isExpanded ? '🔼 Menos' : '🔽 Más'}
-                      </button>
-                    )}
-                    {onGenerateMore && typeItems.length < 20 && (
-                      <button
-                        onClick={() => onGenerateMore(type as ItemType, 10)}
-                        className="text-xs text-green-400 hover:text-green-300 transition-colors"
-                      >
-                        ➕ Generar más
-                      </button>
-                    )}
-                  </div>
-                </div>
-                <div className="flex flex-wrap gap-2 justify-center min-h-[60px] p-2 bg-white/5 rounded-lg border border-white/10">
-                  {itemsToShow.map((item) => (
-                    <DraggableVisualItem 
-                      key={item.id} 
-                      item={item} 
-                    />
-                  ))}
-                  {!isExpanded && hasMore && (
-                    <div className="flex items-center justify-center text-white/50 text-xs bg-white/10 rounded-lg px-3 py-2 border border-white/20">
-                      +{typeItems.length - ITEMS_PER_TYPE_PREVIEW} más
+      {(!isFloating || !isMinimized) && (
+        <>
+          {availableItems.length > 0 ? (
+            <div className="space-y-3">
+              {Object.entries(itemsByType).map(([type, typeItems]) => {
+                const isExpanded = expandedTypes[type] || false;
+                const itemsToShow = isExpanded ? typeItems : typeItems.slice(0, ITEMS_PER_TYPE_PREVIEW);
+                const hasMore = typeItems.length > ITEMS_PER_TYPE_PREVIEW;
+                
+                return (
+                  <div key={type} className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className={`text-white/80 font-medium ${isFloating ? 'text-xs' : 'text-sm'}`}>
+                        {getTypeDisplayName(type)} ({typeItems.length})
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {hasMore && (
+                          <button
+                            onClick={() => toggleExpanded(type)}
+                            className={`text-blue-400 hover:text-blue-300 transition-colors ${isFloating ? 'text-xs' : 'text-xs'}`}
+                          >
+                            {isExpanded ? '🔼 Menos' : '🔽 Más'}
+                          </button>
+                        )}
+                        {onGenerateMore && typeItems.length < 20 && (
+                          <button
+                            onClick={() => onGenerateMore(type as ItemType, 10)}
+                            className={`text-green-400 hover:text-green-300 transition-colors ${isFloating ? 'text-xs' : 'text-xs'}`}
+                          >
+                            ➕ Generar más
+                          </button>
+                        )}
+                      </div>
                     </div>
-                  )}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      ) : (
-        <div className="text-center py-8">
-          <div className="text-4xl mb-2">🎯</div>
-          <p className="text-white/70 text-sm">
-            {currentProblemType 
-              ? '¡Todos los objetos de este problema han sido utilizados!'
-              : '¡Todos los objetos han sido utilizados!'
-            }
-          </p>
-          <p className="text-white/50 text-xs mt-1">
-            Verifica que los grupos estén completos
-          </p>
-        </div>
+                    <div className={`flex flex-wrap gap-2 justify-center p-2 bg-white/5 rounded-lg border border-white/10 ${isFloating ? 'min-h-[50px]' : 'min-h-[60px]'}`}>
+                      {itemsToShow.map((item) => (
+                        <DraggableVisualItem 
+                          key={item.id} 
+                          item={item} 
+                          isFloating={isFloating}
+                        />
+                      ))}
+                      {!isExpanded && hasMore && (
+                        <div className={`flex items-center justify-center text-white/50 bg-white/10 rounded-lg px-2 py-1 border border-white/20 ${isFloating ? 'text-xs' : 'text-xs'}`}>
+                          +{typeItems.length - ITEMS_PER_TYPE_PREVIEW} más
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="text-center py-6">
+              <div className={`mb-2 ${isFloating ? 'text-2xl' : 'text-4xl'}`}>🎯</div>
+              <p className={`text-white/70 ${isFloating ? 'text-xs' : 'text-sm'}`}>
+                {currentProblemType 
+                  ? '¡Todos los objetos de este problema han sido utilizados!'
+                  : '¡Todos los objetos han sido utilizados!'
+                }
+              </p>
+              <p className={`text-white/50 mt-1 ${isFloating ? 'text-xs' : 'text-xs'}`}>
+                Verifica que los grupos estén completos
+              </p>
+            </div>
+          )}
+        </>
       )}
 
-      {/* Pool decorations */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-xl">
-        <div className="absolute top-2 right-2 w-2 h-2 bg-blue-400 rounded-full animate-pulse opacity-50"></div>
-        <div className="absolute bottom-4 left-4 w-1 h-1 bg-green-400 rounded-full animate-ping opacity-30"></div>
-        <div className="absolute top-1/2 left-2 w-1.5 h-1.5 bg-yellow-400 rounded-full animate-pulse opacity-40 delay-1000"></div>
-      </div>
+      {/* Pool decorations - reduced for floating mode */}
+      {!isFloating && (
+        <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-xl">
+          <div className="absolute top-2 right-2 w-2 h-2 bg-blue-400 rounded-full animate-pulse opacity-50"></div>
+          <div className="absolute bottom-4 left-4 w-1 h-1 bg-green-400 rounded-full animate-ping opacity-30"></div>
+          <div className="absolute top-1/2 left-2 w-1.5 h-1.5 bg-yellow-400 rounded-full animate-pulse opacity-40 delay-1000"></div>
+        </div>
+      )}
     </div>
   );
 }

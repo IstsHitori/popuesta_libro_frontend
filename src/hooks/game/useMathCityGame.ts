@@ -7,11 +7,11 @@ import type {
 } from '../../types/math-city.types';
 import { MATH_CITY_PROBLEMS, MATH_CITY_CONFIG } from '../../constants/math-city.config';
 import { useCoinsStore } from '../../stores/coins.store';
-import { useEarnedItemsStore } from '../../stores/earned-items.store';
+import { useLevelCompletion } from '../../hooks/levels/useLevelCompletion';
 
 export function useMathCityGame() {
   const { addCoins, subtractCoins } = useCoinsStore();
-  const { completeLevel } = useEarnedItemsStore();
+  const { completeLevel } = useLevelCompletion();
 
   const [gameState, setGameState] = useState<MathCityGameState>(() => {
     const initialProblem = MATH_CITY_PROBLEMS[0];

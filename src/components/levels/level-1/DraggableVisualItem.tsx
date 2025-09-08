@@ -6,11 +6,13 @@ import VisualItem from "./VisualItem";
 interface DraggableVisualItemProps {
   item: VisualItemType;
   isOverlay?: boolean;
+  isFloating?: boolean;
 }
 
 const DraggableVisualItem = memo(function DraggableVisualItem({ 
   item, 
-  isOverlay = false 
+  isOverlay = false,
+  isFloating = false
 }: DraggableVisualItemProps) {
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: item.id,
@@ -39,10 +41,11 @@ const DraggableVisualItem = memo(function DraggableVisualItem({
     >
       <VisualItem 
         type={item.type} 
-        size="medium"
+        size={isFloating ? "small" : "medium"}
         className={`
           ${isDragging ? 'shadow-2xl' : ''}
           ${isOverlay ? 'shadow-2xl opacity-90' : ''}
+          ${isFloating ? 'scale-90' : ''}
         `}
       />
     </div>

@@ -2,11 +2,11 @@ import { useState, useCallback, useMemo } from 'react';
 import type { FortressGameState, FortressStats } from '../../types/fortress.types';
 import { createFortressProblem, generateEqualNumberOptions, validateEqualNumbers, evaluateExpression } from '../../constants/fortress.config';
 import { useCoinsStore } from '../../stores/coins.store';
-import { useEarnedItemsStore } from '../../stores/earned-items.store';
+import { useLevelCompletion } from '../../hooks/levels/useLevelCompletion';
 
 export const useFortressGame = () => {
   const { addCoins, subtractCoins } = useCoinsStore();
-  const { completeLevel } = useEarnedItemsStore();
+  const { completeLevel } = useLevelCompletion();
   
   const [gameState, setGameState] = useState<FortressGameState>(() => {
     const initialProblem = createFortressProblem();

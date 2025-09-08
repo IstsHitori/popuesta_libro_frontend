@@ -9,12 +9,12 @@ import type {
   ItemType
 } from '../../types/game.types';
 import { useCoinsStore } from '../../stores/coins.store';
-import { useEarnedItemsStore } from '../../stores/earned-items.store';
+import { useLevelCompletion } from '../../hooks/levels/useLevelCompletion';
 
 // Hook for visual multiplication game with objects instead of numbers
 export const useVisualMultiplicationGame = () => {
   const { addCoins, subtractCoins } = useCoinsStore();
-  const { completeLevel } = useEarnedItemsStore();
+  const { completeLevel } = useLevelCompletion();
   
   // Game configuration - Problems that teach multiplication through visual grouping
   const PROBLEMS_CONFIG = useMemo(() => [

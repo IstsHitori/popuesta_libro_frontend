@@ -9,11 +9,11 @@ import type {
 } from '../../types/repeated-addition.types';
 import { REPEATED_ADDITION_PROBLEMS, REPEATED_ADDITION_CONFIG } from '../../constants/repeated-addition.config';
 import { useCoinsStore } from '../../stores/coins.store';
-import { useEarnedItemsStore } from '../../stores/earned-items.store';
+import { useLevelCompletion } from '../../hooks/levels/useLevelCompletion';
 
 export function useRepeatedAdditionGame() {
   const { addCoins, subtractCoins } = useCoinsStore();
-  const { completeLevel } = useEarnedItemsStore();
+  const { completeLevel } = useLevelCompletion();
 
   const [gameState, setGameState] = useState<RepeatedAdditionGameState>(() => {
     const initialProblem = REPEATED_ADDITION_PROBLEMS[0];
