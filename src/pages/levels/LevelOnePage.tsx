@@ -4,19 +4,16 @@ import HeaderLevelSection from "@/components/levels/HeaderLevelSection";
 import MainSectionLeveOne from "@/components/levels/main/MainSectionLeveOne_v2";
 import LevelLoadingScreen from "@/components/levels/LevelLoadingScreen";
 import CompletionModal from "@/components/ui/CompletionModal";
+import LevelProtector from "@/components/levels/LevelProtector";
 import { useLevelLoading } from "@/hooks/ui/useLevelLoading";
 import { useCompletionModal } from "@/hooks/ui/useCompletionModal";
 import { useEarnedItemsStore } from "@/stores/earned-items.store";
 import { LEVEL_LOADING_CONFIG } from "@/constants/level-loading";
-import useUserProfile from "@/hooks/profile/useUserProfile";
 
 export default function LevelOnePage() {
   const { isLoading, completeLoading } = useLevelLoading({ duration: 3500 });
-  const { userProfile } = useUserProfile();
   const { isVisible, showModal, hideModal } = useCompletionModal();
   const { shouldShowModal } = useEarnedItemsStore();
-
-  console.log(userProfile);
 
   // Mostrar modal cuando se complete el nivel 1 (solo si no se ha mostrado antes)
   useEffect(() => {
@@ -39,7 +36,7 @@ export default function LevelOnePage() {
   }
 
   return (
-    <>
+    <LevelProtector levelNumber={1}>
       <div className="min-h-screen">
         <HeaderLevelSection />
         <div className="flex">
@@ -54,6 +51,6 @@ export default function LevelOnePage() {
       
       {/* Modal de completación */}
       <CompletionModal isVisible={isVisible} level={1} onClose={hideModal} />
-    </>
+    </LevelProtector>
   );
 }

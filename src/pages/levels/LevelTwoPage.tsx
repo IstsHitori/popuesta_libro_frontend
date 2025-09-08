@@ -4,6 +4,7 @@ import EarnedItems from "@/components/levels/EarnedItems";
 import HeaderLevelSection from "@/components/levels/HeaderLevelSection";
 import LevelLoadingScreen from "@/components/levels/LevelLoadingScreen";
 import CompletionModal from "@/components/ui/CompletionModal";
+import LevelProtector from "@/components/levels/LevelProtector";
 import { useLevelLoading } from "@/hooks/ui/useLevelLoading";
 import { useCompletionModal } from "@/hooks/ui/useCompletionModal";
 import { useEarnedItemsStore } from "@/stores/earned-items.store";
@@ -36,7 +37,7 @@ export default function LevelTwoPage() {
   }
 
   return (
-    <>
+    <LevelProtector levelNumber={2}>
       <div className="min-h-screen">
         <HeaderLevelSection />
         <div className="flex">
@@ -51,6 +52,6 @@ export default function LevelTwoPage() {
       
       {/* Modal de completación */}
       <CompletionModal isVisible={isVisible} level={2} onClose={hideModal} />
-    </>
+    </LevelProtector>
   );
 }

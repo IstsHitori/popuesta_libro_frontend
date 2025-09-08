@@ -4,6 +4,7 @@ import FortressGame from "@/components/levels/level-4/FortressGame";
 import EarnedItems from "@/components/levels/EarnedItems";
 import HeaderLevelSection from "@/components/levels/HeaderLevelSection";
 import CompletionModal from "@/components/ui/CompletionModal";
+import LevelProtector from "@/components/levels/LevelProtector";
 import { useCompletionModal } from "@/hooks/ui/useCompletionModal";
 import { useEarnedItemsStore } from "@/stores/earned-items.store";
 
@@ -23,7 +24,7 @@ export default function LevelFourPage() {
   }, [shouldShowModal, showModal]);
 
   return (
-    <>
+    <LevelProtector levelNumber={4}>
       <div className="min-h-screen bg-gradient-to-br from-amber-900/30 via-orange-900/30 to-yellow-900/30">
         <HeaderLevelSection />
         
@@ -44,6 +45,6 @@ export default function LevelFourPage() {
       
       {/* Modal de completación */}
       <CompletionModal isVisible={isVisible} level={4} onClose={hideModal} />
-    </>
+    </LevelProtector>
   );
 }
