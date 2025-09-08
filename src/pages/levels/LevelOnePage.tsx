@@ -4,9 +4,13 @@ import MainSectionLeveOne from "@/components/levels/main/MainSectionLeveOne_v2";
 import LevelLoadingScreen from "@/components/levels/LevelLoadingScreen";
 import { useLevelLoading } from "@/hooks/ui/useLevelLoading";
 import { LEVEL_LOADING_CONFIG } from "@/constants/level-loading";
+import useUserProfile from "@/hooks/profile/useUserProfile";
 
 export default function LevelOnePage() {
   const { isLoading, completeLoading } = useLevelLoading({ duration: 3500 });
+  const { userProfile } = useUserProfile();
+
+  console.log(userProfile);
 
   if (isLoading) {
     return (
