@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { Link } from "react-router-dom";
 import { useFortressGame } from "../../../hooks/game/useFortressGame";
 import { useToast } from "../../../hooks/ui/useToast";
+import { useSoundEffects } from "../../../hooks/ui/useSoundEffects";
 import { Toast } from "../../ui/Toast";
 import CoinsDisplay from "../../ui/CoinsDisplay";
 import FortressMatrixComponent from "./FortressMatrix";
@@ -21,7 +22,15 @@ export default function FortressGame() {
   } = useFortressGame();
 
   const { toast, showToast, hideToast } = useToast();
+  const { playCorrectSound, playIncorrectSound, playVictorySound } = useSoundEffects();
   const [isProcessing, setIsProcessing] = useState(false);
+
+  // Reproducir sonido de victoria cuando se completa el nivel
+  useEffect(() => {
+    if (gameState.isLevelCompleted) {
+      playVictorySound();
+    }
+  }, [gameState.isLevelCompleted, playVictorySound]);
 
   const handleOptionSelect = async (optionId: string) => {
     if (isProcessing) return;
@@ -31,8 +40,12 @@ export default function FortressGame() {
     const result = selectOption(optionId);
     
     if (result.success) {
+      // Reproducir sonido de éxito
+      playCorrectSound();
       showToast(result.message || '🎯 ¡Respuesta correcta!', 'success');
     } else {
+      // Reproducir sonido de error
+      playIncorrectSound();
       showToast(result.message || '❌ Respuesta incorrecta', 'error');
     }
     
