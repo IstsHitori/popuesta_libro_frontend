@@ -13,13 +13,21 @@ export default function HeaderLevelSection() {
       <BtnLevel
         level={2}
         backgroundImage={BG_IMAGES.TECH}
-        isCurrent={true}
         isUnlocked={true}
       />
 
-      <BtnLevel level={3} backgroundImage={BG_IMAGES.CITY} />
+      <BtnLevel 
+        level={3} 
+        backgroundImage={BG_IMAGES.CITY} 
+        isUnlocked={true}
+      />
 
-      <BtnLevel level={4} backgroundImage={BG_IMAGES.FORTRESS} />
+      <BtnLevel 
+        level={4} 
+        backgroundImage={BG_IMAGES.FORTRESS} 
+        isCurrent={true}
+        isUnlocked={true}
+      />
     </section>
   );
 }
