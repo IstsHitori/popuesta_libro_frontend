@@ -38,7 +38,7 @@ export default function VisualMultiplicationProblem({
         <div className="flex items-center justify-center gap-3 mb-3">
           <span className="text-4xl">{getItemEmoji()}</span>
           <h3 className="text-white text-xl font-bold">
-            Total: {problem.result} {getItemName()}
+            Organizar {getItemName()}
           </h3>
           <span className="text-4xl">{getItemEmoji()}</span>
         </div>
@@ -49,7 +49,7 @@ export default function VisualMultiplicationProblem({
         
         <div className="bg-blue-500/20 border border-blue-500/30 rounded-lg p-3 mb-4">
           <p className="text-blue-300 text-sm font-semibold">
-            🎯 Arrastra {getItemName()} para formar grupos iguales y descubrir diferentes formas de organizar {problem.result} {getItemName()}
+            🎯 Arrastra {getItemName()} para formar grupos iguales y descubrir diferentes formas de organizarlos
           </p>
         </div>
       </div>
@@ -57,7 +57,7 @@ export default function VisualMultiplicationProblem({
       {/* Grouping options */}
       <div className="space-y-4">
         <h4 className="text-white text-lg font-semibold text-center mb-4">
-          Formas de agrupar {problem.result} {getItemName()}:
+          Formas de agrupar los {getItemName()}:
         </h4>
         
         {problem.possibleGroupings.map((grouping) => {
@@ -120,11 +120,11 @@ function CompletedVisualProblem({ problem }: CompletedVisualProblemProps) {
           </p>
           
           <div className="text-green-400 text-xl font-bold">
-            {grouping.numberOfGroups} × {grouping.groupSize} = {problem.result}
+            {grouping.numberOfGroups} × {grouping.groupSize}
           </div>
           
           <p className="text-white/80 text-sm mt-2">
-            {grouping.numberOfGroups} grupos de {grouping.groupSize} {getItemName()} cada uno = {problem.result} {getItemName()} en total
+            {grouping.numberOfGroups} grupos de {grouping.groupSize} {getItemName()} cada uno
           </p>
         </div>
 

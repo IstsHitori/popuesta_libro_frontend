@@ -140,7 +140,7 @@ export const useFortressGame = () => {
       
       return { 
         success: false, 
-        message: `❌ Incorrecto. El resultado de ${selectedOption.expression} es ${calculatedResult}, pero necesitas ${gameState.currentProblem.currentTarget}. Se descontó 1 moneda.` 
+        message: `❌ Incorrecto. La expresión ${selectedOption.expression} no da el resultado que necesitas (${gameState.currentProblem.currentTarget}). Se descontó 1 moneda.` 
       };
     }
 
@@ -157,7 +157,7 @@ export const useFortressGame = () => {
 
     return { 
       success: true, 
-      message: `🎯 ¡Correcto! ${selectedOption.expression} = ${gameState.currentProblem.currentTarget}. ¡Ganaste 1 moneda!` 
+      message: `🎯 ¡Correcto! ${selectedOption.expression} da el resultado que necesitabas. ¡Ganaste 1 moneda!` 
     };
   }, [gameState.currentProblem, addCoins, subtractCoins, advanceToNextStep]);
 

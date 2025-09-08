@@ -65,10 +65,10 @@ export default function TechCircuit({ boxes, targetResult, isCompleted }: TechCi
                 `} />
               )}
               
-              {/* Result indicator at the end */}
+              {/* Circuit completion indicator */}
               {index === totalBoxes && isCompleted && (
                 <div className="mt-2 text-green-400 text-xs font-bold animate-bounce">
-                  = {targetResult}
+                  ✓ Completado
                 </div>
               )}
             </div>

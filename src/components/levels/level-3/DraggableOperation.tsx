@@ -50,17 +50,6 @@ export default function DraggableOperation({ operation, isOverlay = false }: Dra
         `}>
           {operation.operation}
         </div>
-        <div className={`
-          text-xs
-          ${isOverlay 
-            ? 'text-amber-100' 
-            : operation.isUsed 
-            ? 'text-gray-500' 
-            : 'text-white/60'
-          }
-        `}>
-          = {operation.result}
-        </div>
       </div>
     </div>
   );

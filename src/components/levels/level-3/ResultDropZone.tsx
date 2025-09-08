@@ -50,15 +50,6 @@ export default function ResultDropZone({ resultZone }: ResultDropZoneProps) {
             `}>
               {resultZone.currentOperation.operation}
             </div>
-            <div className={`
-              text-lg
-              ${resultZone.isCorrect 
-                ? 'text-green-300' 
-                : 'text-red-300'
-              }
-            `}>
-              = {resultZone.currentOperation.result}
-            </div>
             {resultZone.isCorrect && (
               <div className="text-green-300 text-sm mt-2 animate-pulse">
                 ✅ ¡Operación Correcta!

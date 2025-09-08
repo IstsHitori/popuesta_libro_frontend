@@ -62,7 +62,7 @@ export default function MathCityGame() {
       if (result.success) {
         if (result.isCompletedProblem) {
           playCorrectSound();
-          showToast(`🎯 ¡Problema resuelto! ${gameState.currentProblem.correctOperation} = ${gameState.currentProblem.targetResult}`, 'success');
+          showToast(`🎯 ¡Problema resuelto! ${gameState.currentProblem.correctOperation}`, 'success');
         } else if (result.message) {
           if (result.isCorrectOperation) {
             playCorrectSound();
@@ -260,7 +260,7 @@ export default function MathCityGame() {
                     🎯 ¡Excelente! Has resuelto el problema matemático
                   </p>
                   <p className="text-purple-200 text-sm mt-1">
-                    {gameState.currentProblem.correctOperation} = {gameState.currentProblem.targetResult}
+                    {gameState.currentProblem.correctOperation}
                   </p>
                 </div>
               )}

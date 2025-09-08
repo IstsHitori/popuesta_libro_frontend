@@ -54,9 +54,6 @@ export default function FortressOptions({
               <div className="text-sm">
                 {option.expression}
               </div>
-              <div className="text-amber-200 text-xs">
-                = {option.result}
-              </div>
             </div>
           </button>
         ))}
