@@ -1,13 +1,15 @@
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import EarnedItems from "@/components/levels/EarnedItems";
 import HeaderLevelSection from "@/components/levels/HeaderLevelSection";
 import LevelLoadingScreen from "@/components/levels/LevelLoadingScreen";
 import CompletionModal from "@/components/ui/CompletionModal";
 import LevelProtector from "@/components/levels/LevelProtector";
+import LevelTimer from "@/components/ui/LevelTimer";
 import { useLevelLoading } from "@/hooks/ui/useLevelLoading";
 import { useCompletionModal } from "@/hooks/ui/useCompletionModal";
 import { useEarnedItemsStore } from "@/stores/earned-items.store";
+import { useGameTimer } from "@/hooks/ui/useGameTimer";
 import { LEVEL_LOADING_CONFIG } from "@/constants/level-loading";
 import MathCityGame from "@/components/levels/level-3/MathCityGame";
 
@@ -15,17 +17,30 @@ export default function LevelThreePage() {
   const { isLoading, completeLoading } = useLevelLoading({ duration: 3500 });
   const { isVisible, showModal, hideModal } = useCompletionModal();
   const { shouldShowModal } = useEarnedItemsStore();
+  const { addLevelTime } = useGameTimer();
+  const [levelTime, setLevelTime] = useState(0);
+  const [isLevelActive, setIsLevelActive] = useState(false);
+
+  // Iniciar timer cuando termine la carga
+  useEffect(() => {
+    if (!isLoading) {
+      setIsLevelActive(true);
+    }
+  }, [isLoading]);
 
   // Mostrar modal cuando se complete el nivel 3 (solo si no se ha mostrado antes)
   useEffect(() => {
     if (shouldShowModal(3)) {
+      setIsLevelActive(false); // Detener el timer
+      addLevelTime(levelTime); // Añadir tiempo del nivel al tiempo total
+      
       const timer = setTimeout(() => {
         showModal();
       }, 1500);
       
       return () => clearTimeout(timer);
     }
-  }, [shouldShowModal, showModal]);
+  }, [shouldShowModal, showModal, levelTime, addLevelTime]);
   
   if (isLoading) {
     return (
@@ -40,6 +55,16 @@ export default function LevelThreePage() {
     <LevelProtector levelNumber={3}>
       <div className="min-h-screen">
         <HeaderLevelSection />
+        
+        {/* Timer del nivel */}
+        <div className="fixed top-4 right-4 z-30">
+          <LevelTimer 
+            isActive={isLevelActive} 
+            onTimeUpdate={setLevelTime}
+            className="shadow-lg"
+          />
+        </div>
+        
         <div className="flex">
           <div className="flex-1">
             <MathCityGame />

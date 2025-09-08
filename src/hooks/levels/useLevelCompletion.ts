@@ -10,16 +10,16 @@ export function useLevelCompletion() {
   const { coins } = useCoinsStore();
   const [isCompletingLevel, setIsCompletingLevel] = useState(false);
 
-  const completeLevel = useCallback(async (levelNumber: number) => {
+  const completeLevel = useCallback(async (levelNumber: number, timeSpent: number) => {
     if (isCompletingLevel) return; // Evitar múltiples peticiones simultáneas
     
     setIsCompletingLevel(true);
     
     try {
-      console.log(`Completando nivel ${levelNumber} con ${coins} monedas...`);
+      console.log(`Completando nivel ${levelNumber} con ${coins} monedas en ${timeSpent} segundos...`);
       
-      // 1. Hacer la petición para completar el nivel con las monedas actuales
-      await completeLevelService(coins);
+      // 1. Hacer la petición para completar el nivel con las monedas actuales y tiempo
+      await completeLevelService(coins, timeSpent);
       
       // 2. Obtener el perfil actualizado del usuario desde el backend
       const updatedProfile = await getUserProfile();
@@ -28,11 +28,13 @@ export function useLevelCompletion() {
       setUserProfile(updatedProfile);
       
       // 4. Mostrar mensaje de éxito
-      toast.success(`¡Felicidades! Has completado el nivel ${levelNumber}`);
+      const formattedTime = `${Math.floor(timeSpent / 60)}:${(timeSpent % 60).toString().padStart(2, '0')}`;
+      toast.success(`¡Felicidades! Has completado el nivel ${levelNumber} en ${formattedTime}`);
       
       console.log('Nivel completado exitosamente:', {
         level: levelNumber,
         coinsEarned: coins,
+        timeSpent,
         updatedProfile
       });
       

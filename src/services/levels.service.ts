@@ -1,10 +1,14 @@
 import axiosPrivate from "@/helpers/axios.helper";
 import { isAxiosError } from "axios";
 
-export const completeLevel = async (coins_earned: number) => {
+export const completeLevel = async (
+  coins_earned: number,
+  time_spent: number
+) => {
   try {
     const response = await axiosPrivate.post("/me/complete-level", {
       coins_earned,
+      time_spent,
     });
     console.log(response);
   } catch (error) {

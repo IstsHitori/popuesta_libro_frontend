@@ -8,10 +8,12 @@ import type {
 import { MATH_CITY_PROBLEMS, MATH_CITY_CONFIG } from '../../constants/math-city.config';
 import { useCoinsStore } from '../../stores/coins.store';
 import { useLevelCompletion } from '../../hooks/levels/useLevelCompletion';
+import { useLevelTimerStore } from '../../stores/level-timer.store';
 
 export function useMathCityGame() {
   const { addCoins, subtractCoins } = useCoinsStore();
   const { completeLevel } = useLevelCompletion();
+  const { currentLevelTime } = useLevelTimerStore();
 
   const [gameState, setGameState] = useState<MathCityGameState>(() => {
     const initialProblem = MATH_CITY_PROBLEMS[0];
@@ -166,9 +168,9 @@ export function useMathCityGame() {
       }));
       
       // Completar el nivel 3 y ganar recompensas
-      completeLevel(3);
+      completeLevel(3, currentLevelTime);
     }
-  }, [gameState.currentProblemIndex, completeLevel]);
+  }, [gameState.currentProblemIndex, completeLevel, currentLevelTime]);
 
   // Reset current problem
   const resetProblem = useCallback(() => {

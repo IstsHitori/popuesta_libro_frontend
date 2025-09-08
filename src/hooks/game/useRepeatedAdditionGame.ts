@@ -10,10 +10,12 @@ import type {
 import { REPEATED_ADDITION_PROBLEMS, REPEATED_ADDITION_CONFIG } from '../../constants/repeated-addition.config';
 import { useCoinsStore } from '../../stores/coins.store';
 import { useLevelCompletion } from '../../hooks/levels/useLevelCompletion';
+import { useLevelTimerStore } from '../../stores/level-timer.store';
 
 export function useRepeatedAdditionGame() {
   const { addCoins, subtractCoins } = useCoinsStore();
   const { completeLevel } = useLevelCompletion();
+  const { currentLevelTime } = useLevelTimerStore();
 
   const [gameState, setGameState] = useState<RepeatedAdditionGameState>(() => {
     const initialProblem = REPEATED_ADDITION_PROBLEMS[0];
@@ -188,9 +190,9 @@ export function useRepeatedAdditionGame() {
       }));
       
       // Completar el nivel 2 y ganar recompensas
-      completeLevel(2);
+      completeLevel(2, currentLevelTime);
     }
-  }, [gameState.currentProblemIndex, completeLevel]);
+  }, [gameState.currentProblemIndex, completeLevel, currentLevelTime]);
 
   // Reset current problem
   const resetProblem = useCallback(() => {

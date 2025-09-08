@@ -10,11 +10,13 @@ import type {
 } from '../../types/game.types';
 import { useCoinsStore } from '../../stores/coins.store';
 import { useLevelCompletion } from '../../hooks/levels/useLevelCompletion';
+import { useLevelTimerStore } from '../../stores/level-timer.store';
 
 // Hook for visual multiplication game with objects instead of numbers
 export const useVisualMultiplicationGame = () => {
   const { addCoins, subtractCoins } = useCoinsStore();
   const { completeLevel } = useLevelCompletion();
+  const { currentLevelTime } = useLevelTimerStore();
   
   // Game configuration - Problems that teach multiplication through visual grouping
   const PROBLEMS_CONFIG = useMemo(() => [
@@ -236,7 +238,7 @@ export const useVisualMultiplicationGame = () => {
         
         // Si se completó el nivel, otorgar recompensas del nivel 1
         if (newState.isLevelCompleted) {
-          completeLevel(1);
+          completeLevel(1, currentLevelTime);
         }
       }
       
@@ -262,7 +264,7 @@ export const useVisualMultiplicationGame = () => {
         ? `¡Bien! Necesitas ${remainingInGroup} elementos más en este grupo`
         : '¡Grupo completo! Continúa con los otros grupos'
     };
-  }, [gameState, isGroupingCompleted, addCoins, subtractCoins, completeLevel]);
+  }, [gameState, isGroupingCompleted, addCoins, subtractCoins, completeLevel, currentLevelTime]);
 
   // Reset game function
   const resetGame = useCallback(() => {

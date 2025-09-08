@@ -3,10 +3,12 @@ import type { FortressGameState, FortressStats } from '../../types/fortress.type
 import { createFortressProblem, generateMixedOptions, evaluateExpression } from '../../constants/fortress.config';
 import { useCoinsStore } from '../../stores/coins.store';
 import { useLevelCompletion } from '../../hooks/levels/useLevelCompletion';
+import { useLevelTimerStore } from '../../stores/level-timer.store';
 
 export const useFortressGame = () => {
   const { addCoins, subtractCoins } = useCoinsStore();
   const { completeLevel } = useLevelCompletion();
+  const { currentLevelTime } = useLevelTimerStore();
   
   const [gameState, setGameState] = useState<FortressGameState>(() => {
     const initialProblem = createFortressProblem();
@@ -55,7 +57,7 @@ export const useFortressGame = () => {
       // Verificar si hemos completado todos los pasos
       if (nextStep >= currentMatrix.totalSteps) {
         // Completar el nivel 4 y ganar recompensas
-        completeLevel(4);
+        completeLevel(4, currentLevelTime);
         
         return {
           ...prevState,
@@ -100,7 +102,7 @@ export const useFortressGame = () => {
         }
       };
     });
-  }, [completeLevel]);
+  }, [completeLevel, currentLevelTime]);
 
   const selectOption = useCallback((optionId: string) => {
     const selectedOption = gameState.currentProblem.options.find(opt => opt.id === optionId);
