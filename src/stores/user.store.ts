@@ -19,7 +19,6 @@ export const useUserStore = create<UserState & UserActions>((set, get) => ({
     gender: "Masculino",
     money: "0",
     level: 1, // Iniciar en nivel 1
-    score: 0
   } as UserProfile,
   setUserProfile: (userProfile) => {
     set(() => ({ userProfile }));

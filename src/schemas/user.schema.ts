@@ -9,5 +9,4 @@ export const userProfileSchema = z.object({
   gender: z.string({ error: USER_MESSAGES.GENDER_REQUIRED }),
   money: z.string({ error: USER_MESSAGES.MONEY_REQUIRED }),
   level: z.number({ error: USER_MESSAGES.LEVEL_REQUIRED }),
-  score: z.number({ error: USER_MESSAGES.SCORE_REQUIRED }),
 });
