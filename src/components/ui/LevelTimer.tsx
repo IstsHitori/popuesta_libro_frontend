@@ -9,7 +9,7 @@ interface LevelTimerProps {
 }
 
 export default function LevelTimer({ isActive, onTimeUpdate, className = '' }: LevelTimerProps) {
-  const { seconds, formattedTime, startTimer, stopTimer, resetTimer } = useLevelTimer();
+  const { seconds, formattedTime, startTimer, stopTimer } = useLevelTimer();
   const { setCurrentLevelTime } = useLevelTimerStore();
 
   useEffect(() => {
@@ -27,27 +27,14 @@ export default function LevelTimer({ isActive, onTimeUpdate, className = '' }: L
     }
   }, [seconds, onTimeUpdate, setCurrentLevelTime]);
 
-  const resetTimerHandler = () => {
-    resetTimer();
-  };
-
   return (
-    <div className={`flex items-center gap-2 ${className}`}>
+    <div className={`flex items-center ${className}`}>
       <div className="flex items-center gap-2 bg-black/20 backdrop-blur-sm rounded-lg px-3 py-2 border border-white/20">
         <span className="text-lg">⏱️</span>
         <div className="text-white font-mono font-bold text-lg">
           {formattedTime}
         </div>
       </div>
-      {/* Botón de reset solo para debugging - se puede quitar en producción */}
-      {process.env.NODE_ENV === 'development' && (
-        <button
-          onClick={resetTimerHandler}
-          className="text-white/60 hover:text-white text-xs bg-red-500/20 px-2 py-1 rounded"
-        >
-          Reset
-        </button>
-      )}
     </div>
   );
 }

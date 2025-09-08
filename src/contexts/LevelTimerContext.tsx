@@ -1,4 +1,5 @@
-import { createContext, useContext, ReactNode } from 'react';
+/* eslint-disable react-refresh/only-export-components */
+import { createContext, useContext, type ReactNode } from 'react';
 
 interface LevelTimerContextType {
   levelTime: number;

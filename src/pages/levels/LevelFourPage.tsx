@@ -54,7 +54,7 @@ export default function LevelFourPage() {
           <HeaderLevelSection />
           
           {/* Timer del nivel */}
-          <div className="fixed top-4 right-4 z-30">
+          <div className="fixed top-4 left-4 z-30">
             <LevelTimer 
               isActive={isLevelActive} 
               onTimeUpdate={setLevelTime}

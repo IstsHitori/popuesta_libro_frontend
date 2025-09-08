@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useEarnedItemsStore } from '../../stores/earned-items.store';
+import { useGameTimer } from '../../hooks/ui/useGameTimer';
 
 interface CompletionModalProps {
   isVisible: boolean;
@@ -9,6 +10,7 @@ interface CompletionModalProps {
 
 export default function CompletionModal({ isVisible, level, onClose }: CompletionModalProps) {
   const { getAllEarnedGarments, getAllEarnedCrystals, getEarnedItemsCount, markModalAsShown } = useEarnedItemsStore();
+  const { formattedTotalTime } = useGameTimer();
   const [showFinalReward, setShowFinalReward] = useState(false);
   
   const earnedGarments = getAllEarnedGarments();
@@ -82,6 +84,20 @@ export default function CompletionModal({ isVisible, level, onClose }: Completio
                 </div>
               </div>
 
+              {level === 4 && (
+                <div className="bg-black/30 rounded-lg p-4 border border-blue-500/30">
+                  <h4 className="text-blue-300 font-bold mb-2 text-center flex items-center justify-center gap-2">
+                    ⏱️ Tiempo Total de Aventura
+                  </h4>
+                  <p className="text-white font-mono font-bold text-lg text-center">
+                    {formattedTotalTime}
+                  </p>
+                  <p className="text-white/70 text-sm text-center mt-1">
+                    ¡Has completado toda la aventura!
+                  </p>
+                </div>
+              )}
+
               {allLevelsComplete && (
                 <div className="bg-gradient-to-r from-yellow-500/20 to-orange-500/20 rounded-lg p-4 border border-yellow-500/30">
                   <p className="text-yellow-300 text-center font-bold">
@@ -144,6 +160,18 @@ export default function CompletionModal({ isVisible, level, onClose }: Completio
                   </div>
                 ))}
               </div>
+            </div>
+
+            <div className="bg-black/30 rounded-lg p-4 mb-4 border border-blue-500/30">
+              <h4 className="text-blue-300 font-bold mb-2 text-center flex items-center justify-center gap-2">
+                ⏱️ Tiempo Total de Aventura
+              </h4>
+              <p className="text-white font-mono font-bold text-xl text-center">
+                {formattedTotalTime}
+              </p>
+              <p className="text-white/70 text-sm text-center mt-1">
+                ¡Increíble dedicación y perseverancia!
+              </p>
             </div>
 
             <div className="text-center space-y-2 mb-6">
