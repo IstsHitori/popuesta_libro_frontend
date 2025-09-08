@@ -12,7 +12,7 @@ export function useLogout() {
   const logout = () => {
     // 1. Limpiar token de autenticación
     clearAuthToken();
-    
+
     // 2. Resetear perfil de usuario a valores iniciales
     setUserProfile({
       id: 1,
@@ -22,14 +22,15 @@ export function useLogout() {
       gender: "Masculino",
       money: "0",
       level: 1,
+      items: [],
     });
-    
+
     // 3. Limpiar progreso de niveles y recompensas
     resetProgress();
-    
+
     // 4. Limpiar completamente localStorage
     localStorage.clear();
-    
+
     // 5. Redireccionar al login
     navigate("/login", { replace: true });
   };
