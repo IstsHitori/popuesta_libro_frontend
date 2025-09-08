@@ -1,17 +1,76 @@
 import { useCoinsStore } from '../../stores/coins.store';
-import { useEarnedItemsStore } from '../../stores/earned-items.store';
+import useUserProfile from '@/hooks/profile/useUserProfile';
+import type { UserEarnedItems } from '@/types/user.type';
 
 export default function EarnedItems() {
   const { coins, totalEarned, totalLost } = useCoinsStore();
-  const { 
-    getAllEarnedGarments, 
-    getAllEarnedCrystals, 
-    getEarnedItemsCount 
-  } = useEarnedItemsStore();
+  const { userProfile } = useUserProfile();
 
-  const earnedGarments = getAllEarnedGarments();
-  const earnedCrystals = getAllEarnedCrystals();
-  const { garments: garmentCount, crystals: crystalCount } = getEarnedItemsCount();
+  // Separar items por tipo desde el perfil del usuario
+  const userItems = userProfile?.items || [];
+  const earnedGarments = userItems.filter((item: UserEarnedItems) => item.item_type === 'garment');
+  const earnedCrystals = userItems.filter((item: UserEarnedItems) => item.item_type === 'crystal');
+  
+  const garmentCount = earnedGarments.length;
+  const crystalCount = earnedCrystals.length;
+
+  // Debug logs
+  console.log('User Profile:', userProfile);
+  console.log('User Items:', userItems);
+  console.log('Earned Garments:', earnedGarments);
+  console.log('Earned Crystals:', earnedCrystals);
+
+  // Mapear items a imágenes (puedes ajustar estas rutas según tu estructura)
+  const getItemImage = (itemName: string, itemType: string) => {
+    const name = itemName.toLowerCase();
+    
+    if (itemType === 'garment') {
+      if (name.includes('cinturón') || name.includes('cinturon') || name.includes('belt')) {
+        return '/tomas/premios/prendas/cinturon.webp';
+      }
+      if (name.includes('pechera') || name.includes('chest') || name.includes('protector')) {
+        return '/tomas/premios/prendas/pechera.webp';
+      }
+      if (name.includes('botas') || name.includes('boots')) {
+        return '/tomas/premios/prendas/botas.webp';
+      }
+      if (name.includes('casco') || name.includes('helmet')) {
+        return '/tomas/premios/prendas/casco.webp';
+      }
+      if (name.includes('guantes') || name.includes('gloves')) {
+        return '/tomas/premios/prendas/guantes.webp';
+      }
+      return '/tomas/premios/prendas/cinturon.webp'; // Default
+    } else {
+      if (name.includes('rojo') || name.includes('red')) {
+        return '/tomas/premios/cristales/cristal rojo.webp';
+      }
+      if (name.includes('amarillo') || name.includes('yellow')) {
+        return '/tomas/premios/cristales/cristal amarillo.webp';
+      }
+      if (name.includes('gris') || name.includes('gray') || name.includes('grey')) {
+        return '/tomas/premios/cristales/cristal gris.webp';
+      }
+      if (name.includes('verde') || name.includes('green')) {
+        return '/tomas/premios/cristales/cristal verde.webp';
+      }
+      if (name.includes('azul') || name.includes('blue')) {
+        return '/tomas/premios/cristales/cristal azul.webp';
+      }
+      return '/tomas/premios/cristales/cristal rojo.webp'; // Default
+    }
+  };
+
+  // Obtener color del cristal basado en el nombre
+  const getCrystalColor = (itemName: string) => {
+    const name = itemName.toLowerCase();
+    if (name.includes('rojo') || name.includes('red')) return 'red';
+    if (name.includes('amarillo') || name.includes('yellow')) return 'yellow';
+    if (name.includes('gris') || name.includes('gray') || name.includes('grey')) return 'gray';
+    if (name.includes('verde') || name.includes('green')) return 'green';
+    if (name.includes('azul') || name.includes('blue')) return 'blue';
+    return 'gray';
+  };
   return (
     <div
       className="
@@ -80,7 +139,7 @@ export default function EarnedItems() {
                 title={garment.name}
               >
                 <img
-                  src={garment.image}
+                  src={getItemImage(garment.name, garment.item_type)}
                   alt={garment.name}
                   className="w-12 h-12 object-contain"
                 />
@@ -114,31 +173,35 @@ export default function EarnedItems() {
               💎 Completa niveles para ganar cristales
             </div>
           ) : (
-            earnedCrystals.map((crystal) => (
-              <div
-                key={crystal.id}
-                className={`
-                  w-16 h-16 rounded-lg border-2 
-                  ${crystal.color === 'red' ? 'border-red-500/50 bg-gradient-to-br from-red-500/20 to-red-600/20' : ''}
-                  ${crystal.color === 'yellow' ? 'border-yellow-500/50 bg-gradient-to-br from-yellow-500/20 to-yellow-600/20' : ''}
-                  ${crystal.color === 'gray' ? 'border-gray-500/50 bg-gradient-to-br from-gray-500/20 to-gray-600/20' : ''}
-                  ${crystal.color === 'green' ? 'border-green-500/50 bg-gradient-to-br from-green-500/20 to-green-600/20' : ''}
-                  flex items-center justify-center relative overflow-hidden
-                  hover:border-opacity-75 transition-all duration-300
-                  shadow-lg hover:shadow-lg
-                `}
-                title={crystal.name}
-              >
-                <img
-                  src={crystal.image}
-                  alt={crystal.name}
-                  className="w-12 h-12 object-contain"
-                />
-                <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border border-white flex items-center justify-center">
-                  <span className="text-white text-xs">✓</span>
+            earnedCrystals.map((crystal) => {
+              const crystalColor = getCrystalColor(crystal.name);
+              return (
+                <div
+                  key={crystal.id}
+                  className={`
+                    w-16 h-16 rounded-lg border-2 
+                    ${crystalColor === 'red' ? 'border-red-500/50 bg-gradient-to-br from-red-500/20 to-red-600/20' : ''}
+                    ${crystalColor === 'yellow' ? 'border-yellow-500/50 bg-gradient-to-br from-yellow-500/20 to-yellow-600/20' : ''}
+                    ${crystalColor === 'gray' ? 'border-gray-500/50 bg-gradient-to-br from-gray-500/20 to-gray-600/20' : ''}
+                    ${crystalColor === 'green' ? 'border-green-500/50 bg-gradient-to-br from-green-500/20 to-green-600/20' : ''}
+                    ${crystalColor === 'blue' ? 'border-blue-500/50 bg-gradient-to-br from-blue-500/20 to-blue-600/20' : ''}
+                    flex items-center justify-center relative overflow-hidden
+                    hover:border-opacity-75 transition-all duration-300
+                    shadow-lg hover:shadow-lg
+                  `}
+                  title={crystal.name}
+                >
+                  <img
+                    src={getItemImage(crystal.name, crystal.item_type)}
+                    alt={crystal.name}
+                    className="w-12 h-12 object-contain"
+                  />
+                  <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border border-white flex items-center justify-center">
+                    <span className="text-white text-xs">✓</span>
+                  </div>
                 </div>
-              </div>
-            ))
+              );
+            })
           )}
         </div>
       </div>
