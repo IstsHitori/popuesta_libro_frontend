@@ -5,6 +5,7 @@ import { IoIosArrowRoundBack } from "react-icons/io";
 import { Link } from "react-router-dom";
 import { useMathCityGame } from "../../../hooks/game/useMathCityGame";
 import { useToast } from "../../../hooks/ui/useToast";
+import { useSoundEffects } from "../../../hooks/ui/useSoundEffects";
 import { Toast } from "../../ui/Toast";
 import CoinsDisplay from "../../ui/CoinsDisplay";
 import FilledGroupDisplay from "./FilledGroupDisplay";
@@ -27,6 +28,7 @@ export default function MathCityGame() {
     useHint: triggerHint 
   } = useMathCityGame();
   const { toast, showToast, hideToast } = useToast();
+  const { playCorrectSound, playIncorrectSound } = useSoundEffects();
   const [activeOperation, setActiveOperation] = useState<string | null>(null);
 
   const handleDragStart = (event: DragStartEvent) => {
@@ -47,6 +49,7 @@ export default function MathCityGame() {
     if (targetId === 'operations-pool') {
       const result = handleOperationRemoval();
       if (result.success) {
+        playCorrectSound();
         showToast('🧮 Operación devuelta al pool matemático', 'success');
       }
       return;
@@ -58,11 +61,18 @@ export default function MathCityGame() {
       
       if (result.success) {
         if (result.isCompletedProblem) {
+          playCorrectSound();
           showToast(`🎯 ¡Problema resuelto! ${gameState.currentProblem.correctOperation} = ${gameState.currentProblem.targetResult}`, 'success');
         } else if (result.message) {
+          if (result.isCorrectOperation) {
+            playCorrectSound();
+          } else {
+            playIncorrectSound();
+          }
           showToast(result.message, result.isCorrectOperation ? 'success' : 'error');
         }
       } else {
+        playIncorrectSound();
         showToast(result.message || 'Operación incompatible', 'error');
       }
     }

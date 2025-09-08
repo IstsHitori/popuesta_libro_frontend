@@ -5,6 +5,7 @@ import { IoIosArrowRoundBack } from "react-icons/io";
 import { Link } from "react-router-dom";
 import { useRepeatedAdditionGame } from "../../../hooks/game/useRepeatedAdditionGame";
 import { useToast } from "../../../hooks/ui/useToast";
+import { useSoundEffects } from "../../../hooks/ui/useSoundEffects";
 import { Toast } from "../../ui/Toast";
 import CoinsDisplay from "../../ui/CoinsDisplay";
 import AdditionBoxComponent from "./AdditionBoxComponent";
@@ -26,6 +27,7 @@ export default function RepeatedAdditionGame() {
     useHint: triggerHint 
   } = useRepeatedAdditionGame();
   const { toast, showToast, hideToast } = useToast();
+  const { playCorrectSound, playIncorrectSound } = useSoundEffects();
   const [activeNumber, setActiveNumber] = useState<string | null>(null);
 
   const handleDragStart = (event: DragStartEvent) => {
@@ -52,6 +54,7 @@ export default function RepeatedAdditionGame() {
       if (boxWithNumber) {
         const result = handleNumberRemoval(boxWithNumber.id);
         if (result.success) {
+          playCorrectSound();
           showToast('🔧 Componente devuelto al laboratorio', 'success');
         }
       }
@@ -64,11 +67,18 @@ export default function RepeatedAdditionGame() {
       
       if (result.success) {
         if (result.isCompletedProblem) {
+          playCorrectSound();
           showToast(`🎯 ¡Circuito Activado! ${gameState.currentProblem.correctNumber} × ${gameState.currentProblem.repetitions} = ${gameState.currentProblem.targetResult}`, 'success');
         } else if (result.message) {
+          if (result.isCorrectPlacement) {
+            playCorrectSound();
+          } else {
+            playIncorrectSound();
+          }
           showToast(result.message, result.isCorrectPlacement ? 'success' : 'error');
         }
       } else {
+        playIncorrectSound();
         showToast(result.message || 'Componente incompatible con este circuito', 'error');
       }
     }
@@ -133,13 +143,13 @@ export default function RepeatedAdditionGame() {
               <div className="bg-white/5 backdrop-blur-sm rounded-xl overflow-hidden border border-white/20">
                 <img
                   src={tomas_2}
-                  alt="Tomás reparando el robot en el laboratorio"
+                  alt="Ari reparando el robot en el laboratorio"
                   className="w-full h-48 sm:h-56 xl:h-64 object-cover"
                 />
                 <div className="p-4">
                   <h3 className="text-white font-bold text-lg mb-3">La reparación de Tika</h3>
                   <p className="text-white/90 text-sm leading-relaxed mb-4">
-                    Tomás entró al Laboratorio de Tecnología y encontró un robot averiado. El científico le explicó: 
+                    Ari entró al Laboratorio de Tecnología y encontró un robot averiado. El científico le explicó: 
                     'Este robot se repara resolviendo circuitos de suma repetida. Por ejemplo, si necesita 3 sensores 
                     de 2 unidades cada uno, debes programar 2+2+2=6 para activar su sistema.'
                   </p>

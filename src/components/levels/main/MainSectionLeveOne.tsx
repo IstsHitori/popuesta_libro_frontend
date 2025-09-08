@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 
 import { useMultiplicationGame } from "../../../hooks/game/useMultiplicationGame";
 import { useToast } from "../../../hooks/ui/useToast";
+import { useSoundEffects } from "../../../hooks/ui/useSoundEffects";
 import MultiplicationProblemComponent from "../level-1/MultiplicationProblem";
 import NumbersPool from "../level-1/NumbersPool";
 import GameStats from "../level-1/GameStats";
@@ -20,6 +21,7 @@ import tomas_1 from "/tomas/nivel_1.webp";
 export default function MainSectionLeveOne() {
   const { gameState, gameStats, handleDragEnd } = useMultiplicationGame();
   const { toast, showToast, hideToast } = useToast();
+  const { playCorrectSound, playIncorrectSound } = useSoundEffects();
   const [activeNumber, setActiveNumber] = useState<string | null>(null);
   
   // Function to convert VisualItem[] to DraggableItem[] for compatibility
@@ -44,8 +46,10 @@ export default function MainSectionLeveOne() {
     
     // Show feedback to the user
     if (result.success) {
+      playCorrectSound();
       showToast(result.message || '¡Muy bien!', 'success');
     } else if (result.message) {
+      playIncorrectSound();
       showToast(result.message, 'error');
     }
   };
