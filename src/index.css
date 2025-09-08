@@ -122,3 +122,60 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Animaciones suaves para pantallas de carga */
+@layer utilities {
+  .gentle-float {
+    animation: gentleFloat 12s infinite ease-in-out alternate;
+  }
+  
+  .slow-drift {
+    animation: slowDrift 15s infinite ease-in-out alternate;
+  }
+  
+  .subtle-sway {
+    animation: subtleSway 10s infinite ease-in-out alternate;
+  }
+  
+  .soft-pulse {
+    animation: softPulse 8s infinite ease-in-out alternate;
+  }
+}
+
+@keyframes gentleFloat {
+  0% { 
+    transform: translateY(0px) rotate(0deg); 
+  }
+  100% { 
+    transform: translateY(-15px) rotate(5deg); 
+  }
+}
+
+@keyframes slowDrift {
+  0% { 
+    transform: translateX(0px) translateY(0px) rotate(0deg); 
+  }
+  100% { 
+    transform: translateX(10px) translateY(-10px) rotate(3deg); 
+  }
+}
+
+@keyframes subtleSway {
+  0% { 
+    transform: rotate(-2deg) scale(1); 
+  }
+  100% { 
+    transform: rotate(2deg) scale(1.05); 
+  }
+}
+
+@keyframes softPulse {
+  0% { 
+    opacity: 0.15; 
+    transform: scale(1); 
+  }
+  100% { 
+    opacity: 0.25; 
+    transform: scale(1.1); 
+  }
+}

@@ -61,63 +61,46 @@ export default function LevelLoadingScreen({
         backgroundRepeat: 'no-repeat'
       }}
     >
-      {/* Efectos de partículas/hojas flotantes */}
+      {/* Efectos de partículas/elementos flotantes */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(12)].map((_, i) => {
-          // Animaciones más lentas y naturales para nivel 1 (hojas)
-          const isLevel1 = levelNumber === 1;
-          
-          // Diferentes tipos de animación para variedad
-          const getAnimationClass = () => {
-            if (isLevel1) {
-              // Para hojas: animaciones más suaves
-              switch (i % 4) {
-                case 0: return '';  // Sin animación predefinida
-                case 1: return 'animate-pulse';
-                case 2: return 'animate-bounce';
-                default: return '';
-              }
-            } else {
-              // Para otros elementos
-              return i % 2 === 0 ? 'animate-pulse' : 'animate-bounce';
-            }
-          };
-          
-          const animationDuration = isLevel1 
-            ? `${6 + Math.random() * 6}s`  // 6-12 segundos para hojas (más lento)
-            : `${3 + Math.random() * 3}s`; // 3-6 segundos para otros
-          
+        {[...Array(8)].map((_, i) => {
+          // Posiciones y animaciones más suaves
           const animationDelay = `${Math.random() * 5}s`;
           
-          // Movimiento personalizado para hojas
-          const customTransform = isLevel1 
-            ? `translateY(${Math.sin(i) * 20}px) rotate(${Math.random() * 20 - 10}deg)` 
-            : 'none';
+          // Diferentes tipos de movimiento suave
+          const getCustomAnimation = () => {
+            const animations = [
+              'gentle-float',
+              'slow-drift', 
+              'subtle-sway',
+              'soft-pulse'
+            ];
+            return animations[i % animations.length];
+          };
+          
+          const getIcon = () => {
+            if (levelNumber === 1) {
+              return ['🍃', '🌿', '🍎', '🌳'][i % 4];
+            } else if (levelNumber === 2) {
+              return ['⚙️', '🔧', '💡', '⚡'][i % 4];
+            } else if (levelNumber === 3) {
+              return ['🏗️', '🔮', '🎯', '💎'][i % 4];
+            } else {
+              return ['🏰', '⚔️', '🛡️', '👑'][i % 4];
+            }
+          };
           
           return (
             <div
               key={i}
-              className={`absolute opacity-30 text-2xl transition-all ${getAnimationClass()}`}
+              className={`absolute opacity-20 text-xl transition-all duration-1000 ${getCustomAnimation()}`}
               style={{
                 left: `${Math.random() * 100}%`,
                 top: `${Math.random() * 100}%`,
-                animationDelay: animationDelay,
-                animationDuration: animationDuration,
-                animationTimingFunction: isLevel1 ? 'ease-in-out' : 'linear',
-                transform: customTransform,
-                // Añadir un pequeño movimiento continuo para las hojas
-                ...(isLevel1 && {
-                  animation: `${getAnimationClass().replace('animate-', '')} ${animationDuration} ${animationDelay} infinite ease-in-out alternate`
-                })
+                animationDelay: animationDelay
               }}
             >
-              {levelNumber === 1 ? (
-                ['🍃', '🌿', '🍎', '🌳'][i % 4]
-              ) : levelNumber === 2 ? (
-                ['⚙️', '🔧', '💡', '⚡'][i % 4]
-              ) : (
-                '🔮'
-              )}
+              {getIcon()}
             </div>
           );
         })}
