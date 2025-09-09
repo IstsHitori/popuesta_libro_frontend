@@ -45,7 +45,7 @@ export default function GameStats({
             <span className="text-sm">¡Nivel completado!</span>
           </div>
           <Link 
-            to="/app/niveles/nivel-2" 
+            to="/app/niveles/2" 
             className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-4 py-2 rounded-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
           >
             Siguiente Nivel →
