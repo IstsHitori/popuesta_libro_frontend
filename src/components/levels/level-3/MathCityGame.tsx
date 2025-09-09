@@ -14,7 +14,7 @@ import ResultDropZone from "./ResultDropZone";
 import OperationsPool from "./OperationsPool";
 import MathCityStatsComponent from "./MathCityStatsComponent";
 
-import tomas_3 from "/tomas/tomas-3.png";
+import tomas_3 from "/personajes/villano_caos.webp";
 
 export default function MathCityGame() {
   const { 

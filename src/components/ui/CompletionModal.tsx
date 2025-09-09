@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useEarnedItemsStore } from '../../stores/earned-items.store';
 import { useGameTimer } from '../../hooks/ui/useGameTimer';
+import FinalVideoModal from './FinalVideoModal';
 
 interface CompletionModalProps {
   isVisible: boolean;
@@ -12,6 +13,8 @@ export default function CompletionModal({ isVisible, level, onClose }: Completio
   const { getAllEarnedGarments, getAllEarnedCrystals, getEarnedItemsCount, markModalAsShown } = useEarnedItemsStore();
   const { formattedTotalTime } = useGameTimer();
   const [showFinalReward, setShowFinalReward] = useState(false);
+  const [showFinalVideo, setShowFinalVideo] = useState(false);
+  const [videoCompleted, setVideoCompleted] = useState(false);
   
   const earnedGarments = getAllEarnedGarments();
   const earnedCrystals = getAllEarnedCrystals();
@@ -19,6 +22,27 @@ export default function CompletionModal({ isVisible, level, onClose }: Completio
   
   // Verificar si se completaron todos los niveles
   const allLevelsComplete = garmentCount === 4 && crystalCount === 4;
+
+  // Debug logs
+  console.log('CompletionModal Debug:', {
+    isVisible,
+    level,
+    garmentCount,
+    crystalCount,
+    allLevelsComplete,
+    showFinalVideo,
+    videoCompleted
+  });
+
+  console.log('CompletionModal Debug:', {
+    isVisible,
+    level,
+    garmentCount,
+    crystalCount,
+    allLevelsComplete,
+    showFinalVideo,
+    showFinalReward
+  });
 
   const handleClose = () => {
     if (level) {
@@ -28,18 +52,37 @@ export default function CompletionModal({ isVisible, level, onClose }: Completio
   };
 
   useEffect(() => {
-    if (isVisible && allLevelsComplete) {
-      // Mostrar recompensa final después de un breve delay
+    if (isVisible && level === 4 && allLevelsComplete && !videoCompleted) {
+      // Si es el nivel 4 y se completaron todos los niveles, mostrar video final primero
+      setShowFinalVideo(true);
+    } else if (isVisible && allLevelsComplete) {
+      // Mostrar recompensa final después del video o para otros casos
       const timer = setTimeout(() => {
         setShowFinalReward(true);
       }, 1000);
       return () => clearTimeout(timer);
     } else {
       setShowFinalReward(false);
+      if (!videoCompleted) {
+        setShowFinalVideo(false);
+      }
     }
-  }, [isVisible, allLevelsComplete]);
+  }, [isVisible, allLevelsComplete, level, videoCompleted]);
 
   if (!isVisible) return null;
+
+  // Si se debe mostrar el video final (nivel 4 completado), mostrar solo el video
+  if (showFinalVideo && !videoCompleted) {
+    return (
+      <FinalVideoModal 
+        isVisible={showFinalVideo} 
+        onVideoComplete={() => {
+          setShowFinalVideo(false);
+          setVideoCompleted(true);
+        }} 
+      />
+    );
+  }
 
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">

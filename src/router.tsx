@@ -9,6 +9,7 @@ import LevelOnePage from "./pages/levels/LevelOnePage";
 import LevelTwoPage from "./pages/levels/LevelTwoPage";
 import LevelThreePage from "./pages/levels/LevelThreePage";
 import LevelFourPage from "./pages/levels/LevelFourPage";
+import IntroVideoPage from "./pages/IntroVideoPage";
 
 export const router = createBrowserRouter([
   {
@@ -28,6 +29,10 @@ export const router = createBrowserRouter([
         element: <RegisterForm />,
       },
     ],
+  },
+  {
+    path: "/intro",
+    element: <IntroVideoPage />,
   },
   {
     path: "/app",
