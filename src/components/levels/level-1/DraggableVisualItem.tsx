@@ -26,6 +26,11 @@ const DraggableVisualItem = memo(function DraggableVisualItem({
       }
     : undefined;
 
+  // No renderizar el elemento si está siendo usado, a menos que sea un overlay
+  if (item.isUsed && !isOverlay && !isDragging) {
+    return null;
+  }
+
   return (
     <div
       ref={setNodeRef}
@@ -35,7 +40,7 @@ const DraggableVisualItem = memo(function DraggableVisualItem({
       className={`
         transition-transform duration-200 will-change-transform
         ${isDragging ? 'opacity-50 rotate-12 scale-110' : ''}
-        ${item.isUsed ? 'opacity-30 cursor-not-allowed' : 'cursor-grab active:cursor-grabbing hover:scale-105'}
+        ${item.isUsed ? 'opacity-30 cursor-not-allowed pointer-events-none' : 'cursor-grab active:cursor-grabbing hover:scale-105'}
         ${isOverlay ? 'rotate-12 scale-110' : ''}
       `}
     >
@@ -46,6 +51,7 @@ const DraggableVisualItem = memo(function DraggableVisualItem({
           ${isDragging ? 'shadow-2xl' : ''}
           ${isOverlay ? 'shadow-2xl opacity-90' : ''}
           ${isFloating ? 'scale-90' : ''}
+          ${item.isUsed ? 'grayscale' : ''}
         `}
       />
     </div>

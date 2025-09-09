@@ -172,47 +172,50 @@ export const useMultiplicationGame = () => {
     // ✅ CORRECT PLACEMENT: Add coins
     addCoins(1, `Colocación correcta: ${draggedItem.type} en lugar correcto`);
 
-    // Update game state
+    // Update game state - usar setTimeout para permitir que el DOM se limpie antes de actualizar
     const completionResult = { problemCompleted: false, levelCompleted: false };
     
-    setGameState(prevState => {
-      const newState = { ...prevState };
-      
-      // Mark item as used and assign to grouping
-      newState.availableItems = prevState.availableItems.map(item =>
-        item.id === draggedItemId 
-          ? { ...item, isUsed: true, groupingId }
-          : item
-      );
-      
-      // Check if this grouping is now complete
-      // Check if ALL groupings for this problem are complete
-      const problem = newState.problems.find(p => p.id === problemId)!;
-      const allGroupingsComplete = problem.possibleGroupings.every(groupingOption => {
-        const itemsForThisGrouping = newState.availableItems.filter(
-          item => item.groupingId === groupingOption.id
+    // Usar requestAnimationFrame para asegurar que el DOM se actualice correctamente
+    requestAnimationFrame(() => {
+      setGameState(prevState => {
+        const newState = { ...prevState };
+        
+        // Mark item as used and assign to grouping
+        newState.availableItems = prevState.availableItems.map(item =>
+          item.id === draggedItemId 
+            ? { ...item, isUsed: true, groupingId }
+            : item
         );
-        return itemsForThisGrouping.length === groupingOption.numberOfGroups;
+        
+        // Check if this grouping is now complete
+        // Check if ALL groupings for this problem are complete
+        const problem = newState.problems.find(p => p.id === problemId)!;
+        const allGroupingsComplete = problem.possibleGroupings.every(groupingOption => {
+          const itemsForThisGrouping = newState.availableItems.filter(
+            item => item.groupingId === groupingOption.id
+          );
+          return itemsForThisGrouping.length === groupingOption.numberOfGroups;
+        });
+        
+        if (allGroupingsComplete) {
+          // Mark problem as completed when ALL groupings are complete
+          newState.problems = prevState.problems.map(p => 
+            p.id === problemId 
+              ? { ...p, isCompleted: true }
+              : p
+          );
+          
+          // Update score and check if level is completed
+          newState.score += 1;
+          newState.isLevelCompleted = newState.problems.every(p => p.isCompleted);
+          
+          // Set completion flags for return message
+          completionResult.problemCompleted = true;
+          completionResult.levelCompleted = newState.isLevelCompleted;
+        }
+        
+        return newState;
       });
-      
-      if (allGroupingsComplete) {
-        // Mark problem as completed when ALL groupings are complete
-        newState.problems = prevState.problems.map(p => 
-          p.id === problemId 
-            ? { ...p, isCompleted: true }
-            : p
-        );
-        
-        // Update score and check if level is completed
-        newState.score += 1;
-        newState.isLevelCompleted = newState.problems.every(p => p.isCompleted);
-        
-        // Set completion flags for return message
-        completionResult.problemCompleted = true;
-        completionResult.levelCompleted = newState.isLevelCompleted;
-      }
-      
-      return newState;
     });
 
     // Check completion status for return message after state update

@@ -21,16 +21,16 @@ export default function VisualItemsPool({
   const [isMinimized, setIsMinimized] = useState(false); // Don't start minimized to show all items
   const ITEMS_PER_TYPE_PREVIEW = isFloating ? 6 : 8; // Show more items when floating
   
-  // Filter items to show only those for the current problem
+  // Mostrar todos los elementos, pero los usados se verán visualmente diferentes
   const availableItems = useMemo(() => 
     items.filter(item => 
-      !item.isUsed && (!currentProblemType || item.type === currentProblemType)
+      !currentProblemType || item.type === currentProblemType
     ), [items, currentProblemType]
   );
   
-  // Group items by type for better visualization
+  // Agrupar elementos por tipo, solo los no usados para visualización
   const itemsByType = useMemo(() => 
-    availableItems.reduce((acc, item) => {
+    availableItems.filter(item => !item.isUsed).reduce((acc, item) => {
       if (!acc[item.type]) {
         acc[item.type] = [];
       }
@@ -80,14 +80,14 @@ export default function VisualItemsPool({
             </button>
           )}
           <div className={`text-white/60 ${isFloating ? 'text-xs' : 'text-sm'}`}>
-            {availableItems.length} disponible{availableItems.length !== 1 ? 's' : ''}
+            {availableItems.filter(item => !item.isUsed).length} disponible{availableItems.filter(item => !item.isUsed).length !== 1 ? 's' : ''}
           </div>
         </div>
       </div>
       
       {(!isFloating || !isMinimized) && (
         <>
-          {availableItems.length > 0 ? (
+          {availableItems.filter(item => !item.isUsed).length > 0 ? (
             <div className="space-y-3">
               {Object.entries(itemsByType).map(([type, typeItems]) => {
                 const isExpanded = expandedTypes[type] || false;
