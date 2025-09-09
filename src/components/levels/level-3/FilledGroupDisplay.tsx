@@ -33,10 +33,6 @@ export default function FilledGroupDisplay({ group }: FilledGroupDisplayProps) {
                 </div>
               ))}
             </div>
-            
-            <div className="text-center mt-2">
-              <span className="text-white/80 text-sm font-semibold">{group.itemsPerGroup}</span>
-            </div>
           </div>
         ))}
       </div>

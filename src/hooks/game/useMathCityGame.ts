@@ -3,12 +3,119 @@ import type {
   MathCityGameState,
   MathCityDropResult,
   MathCityStats,
-  ResultZone
+  ResultZone,
+  MathCityProblem,
+  MathOperation
 } from '../../types/math-city.types';
 import { MATH_CITY_PROBLEMS, MATH_CITY_CONFIG } from '../../constants/math-city.config';
 import { useCoinsStore } from '../../stores/coins.store';
 import { useLevelCompletion } from '../../hooks/levels/useLevelCompletion';
 import { useLevelTimerStore } from '../../stores/level-timer.store';
+
+// Función para generar operaciones distractoras adicionales
+function generateDistractorOperations(targetResult: number, existingOperations: MathOperation[]): MathOperation[] {
+  const newDistractors: MathOperation[] = [];
+  const usedOperations = new Set(existingOperations.map(op => op.operation));
+  
+  // Generar diferentes tipos de operaciones distractoras
+  const distractorPatterns = [
+    // Sumas con números consecutivos
+    () => {
+      const start = Math.floor(Math.random() * 3) + 1;
+      const count = Math.floor(Math.random() * 3) + 3; // 3-5 números
+      const numbers = Array.from({ length: count }, (_, i) => start + i);
+      return numbers.join('+');
+    },
+    // Sumas que dan resultado cercano
+    () => {
+      const diff = Math.floor(Math.random() * 4) - 2; // -2 a +2
+      const newTarget = Math.max(1, targetResult + diff);
+      if (newTarget === targetResult) return null;
+      
+      // Crear suma simple que dé ese resultado
+      const numTerms = Math.floor(Math.random() * 3) + 2; // 2-4 términos
+      const baseNum = Math.floor(newTarget / numTerms);
+      const remainder = newTarget % numTerms;
+      
+      const terms = Array(numTerms).fill(baseNum);
+      for (let i = 0; i < remainder; i++) {
+        terms[i]++;
+      }
+      return terms.join('+');
+    },
+    // Sumas con números más grandes pero menos términos
+    () => {
+      const largerBase = Math.floor(targetResult / 2) + Math.floor(Math.random() * 3) + 1;
+      const secondNum = targetResult - largerBase + Math.floor(Math.random() * 3) - 1;
+      if (secondNum <= 0) return null;
+      return `${largerBase}+${secondNum}`;
+    }
+  ];
+  
+  let attempts = 0;
+  while (newDistractors.length < 2 && attempts < 15) {
+    const pattern = distractorPatterns[Math.floor(Math.random() * distractorPatterns.length)];
+    const operation = pattern();
+    
+    if (operation && !usedOperations.has(operation)) {
+      // Calcular el resultado de la operación
+      try {
+        const result = eval(operation.replace(/[^0-9+]/g, ''));
+        if (result > 0 && result < 50) { // Mantener resultados razonables
+          newDistractors.push({
+            id: `distractor-${newDistractors.length + 1}`,
+            operation,
+            result,
+            isUsed: false,
+            isCorrect: false,
+            originalPosition: { x: 50 + (existingOperations.length + newDistractors.length) * 120, y: 400 }
+          });
+          usedOperations.add(operation);
+        }
+      } catch {
+        // Si hay error en eval, ignorar esta operación
+      }
+    }
+    attempts++;
+  }
+  
+  return newDistractors;
+}
+
+// Función para mezclar operaciones usando Fisher-Yates shuffle
+function shuffleOperations(operations: MathOperation[]): MathOperation[] {
+  const shuffled = [...operations];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  
+  // Actualizar las posiciones originales después de mezclar
+  return shuffled.map((op, index) => ({
+    ...op,
+    originalPosition: { x: 50 + index * 120, y: 400 }
+  }));
+}
+
+// Función para preparar un problema con operaciones mezcladas y distractores adicionales
+function prepareProblemWithShuffledOperations(problem: MathCityProblem): MathCityProblem {
+  // Generar operaciones distractoras adicionales
+  const additionalDistractors = generateDistractorOperations(
+    problem.targetResult, 
+    problem.availableOperations
+  );
+  
+  // Combinar operaciones existentes con las nuevas
+  const allOperations = [...problem.availableOperations, ...additionalDistractors];
+  
+  // Mezclar todas las operaciones
+  const shuffledOperations = shuffleOperations(allOperations);
+  
+  return {
+    ...problem,
+    availableOperations: shuffledOperations
+  };
+}
 
 export function useMathCityGame() {
   const { addCoins, subtractCoins } = useCoinsStore();
@@ -16,10 +123,14 @@ export function useMathCityGame() {
   const { currentLevelTime } = useLevelTimerStore();
 
   const [gameState, setGameState] = useState<MathCityGameState>(() => {
-    const initialProblem = MATH_CITY_PROBLEMS[0];
+    const initialProblem = prepareProblemWithShuffledOperations(MATH_CITY_PROBLEMS[0]);
+    const shuffledProblems = MATH_CITY_PROBLEMS.map(problem => 
+      prepareProblemWithShuffledOperations(problem)
+    );
+    
     return {
       currentProblemIndex: 0,
-      problems: [...MATH_CITY_PROBLEMS],
+      problems: shuffledProblems,
       currentProblem: initialProblem,
       selectedOperation: null,
       isCompleted: false,
@@ -32,7 +143,7 @@ export function useMathCityGame() {
 
   const [resultZone, setResultZone] = useState<ResultZone>(() => ({
     id: 'result-zone',
-    targetResult: MATH_CITY_PROBLEMS[0].targetResult,
+    targetResult: prepareProblemWithShuffledOperations(MATH_CITY_PROBLEMS[0]).targetResult,
     currentOperation: null,
     isHighlighted: false,
     isCorrect: null
@@ -141,9 +252,9 @@ export function useMathCityGame() {
 
   // Go to next problem
   const nextProblem = useCallback(() => {
-    if (gameState.currentProblemIndex < MATH_CITY_PROBLEMS.length - 1) {
+    if (gameState.currentProblemIndex < gameState.problems.length - 1) {
       const nextIndex = gameState.currentProblemIndex + 1;
-      const nextProblem = MATH_CITY_PROBLEMS[nextIndex];
+      const nextProblem = gameState.problems[nextIndex];
       
       setGameState(prevState => ({
         ...prevState,
@@ -170,7 +281,7 @@ export function useMathCityGame() {
       // Completar el nivel 3 y ganar recompensas
       completeLevel(3, currentLevelTime);
     }
-  }, [gameState.currentProblemIndex, completeLevel, currentLevelTime]);
+  }, [gameState.currentProblemIndex, gameState.problems, completeLevel, currentLevelTime]);
 
   // Reset current problem
   const resetProblem = useCallback(() => {
