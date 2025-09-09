@@ -17,7 +17,7 @@ export default function LevelFourPage() {
   const { isLoading, completeLoading } = useLevelLoading({ duration: 3500 });
   const { isVisible, showModal, hideModal } = useCompletionModal();
   const { shouldShowModal } = useEarnedItemsStore();
-  const { addLevelTime, totalSeconds, formattedTotalTime } = useGameTimer();
+  const { addLevelTime} = useGameTimer();
   const [levelTime, setLevelTime] = useState(0);
   const [isLevelActive, setIsLevelActive] = useState(false);
 
