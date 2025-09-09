@@ -1,11 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import image_kid from "/personajes/personaje_niño.webp";
+import image_girl from "/personajes/personaje_niña.webp";
 import { VscDebugStart } from "react-icons/vsc";
 import { useState } from "react";
 import LoadingScreen from "@/components/loaders/LoadingScreen";
+import useUserProfile from "@/hooks/profile/useUserProfile";
 
 export default function GameScreen() {
   const navigate = useNavigate();
+  const { userProfile } = useUserProfile();
   const [isAnimate, setIsAnimate] = useState(false);
   const goToLevels = () => {
     setIsAnimate(true);
@@ -31,7 +34,7 @@ export default function GameScreen() {
           <div className="flex gap-8 items-center">
             <div className="intro-image">
               <img
-                src={image_kid}
+                src={userProfile.gender === "Masculino" ? image_kid : image_girl}
                 alt="Tomás"
                 className="w-[300px] rounded-lg shadow-lg transition-transform duration-200 hover:scale-105 animate__animated animate__fadeInLeft"
               />
