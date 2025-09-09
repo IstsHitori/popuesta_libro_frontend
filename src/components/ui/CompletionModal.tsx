@@ -51,6 +51,8 @@ export default function CompletionModal({ isVisible, level, onClose }: Completio
     onClose();
   };
 
+  console.log(level);
+  
   useEffect(() => {
     if (isVisible && level === 4 && allLevelsComplete && !videoCompleted) {
       // Si es el nivel 4 y se completaron todos los niveles, mostrar video final primero

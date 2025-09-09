@@ -10,8 +10,6 @@ import FortressMatrixComponent from "./FortressMatrix";
 import FortressOptions from "./FortressOptions";
 import FortressStatsComponent from "./FortressStats";
 
-import tomas_ganador from "/tomas/tomas-ganador.png";
-
 export default function FortressGame() {
   const { 
     gameState, 
@@ -78,50 +76,52 @@ export default function FortressGame() {
           <div className="absolute top-2/3 right-1/3 w-2 h-2 bg-orange-300 rounded-full animate-ping opacity-70"></div>
         </div>
 
-        <div className="container mx-auto max-w-4xl flex items-center justify-center min-h-screen relative z-10">
-          <div className="bg-gradient-to-br from-amber-800/90 via-orange-800/90 to-yellow-800/90 backdrop-blur-xl rounded-3xl p-8 text-center shadow-2xl border-4 border-amber-400/50 relative overflow-hidden">
+        <div className="container mx-auto max-w-5xl flex items-center justify-center min-h-screen relative z-10">
+          <div className="w-full bg-gradient-to-br from-purple-900/95 to-blue-900/95 rounded-2xl p-6 border-2 border-yellow-500/50 shadow-2xl">
             
-            {/* Efectos decorativos en el fondo de la tarjeta */}
-            <div className="absolute inset-0 bg-gradient-to-r from-amber-500/10 via-transparent to-orange-500/10 rounded-3xl"></div>
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-amber-400 to-transparent"></div>
-            <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-orange-400 to-transparent"></div>
-            
-            <div className="relative z-10">
-              <img src={tomas_ganador} alt="Ari conquistadora" className="w-32 h-32 mx-auto mb-4 drop-shadow-lg" />
-              
-              <h2 className="text-4xl font-bold text-amber-100 mb-2 drop-shadow-lg">
-                🏰 ¡Fortaleza Conquistada! 🏰
-              </h2>
-              
-              <div className="w-20 h-1 bg-gradient-to-r from-amber-400 to-orange-400 mx-auto mb-6 rounded-full"></div>
-              
-              <p className="text-amber-200 mb-8 text-lg leading-relaxed drop-shadow-sm max-w-2xl mx-auto">
-                ¡Increíble trabajo, Ari! Has navegado exitosamente a través de todos los caminos de la fortaleza. 
-                Tu dominio de las operaciones matemáticas te ha llevado a la victoria total.
+            {/* Título de Felicitación */}
+            <div className="text-center mb-6">
+              <h1 className="text-4xl md:text-5xl font-bold text-yellow-400 mb-2 animate-pulse" style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}>
+                🎉 ¡NIVEL 4 COMPLETADO! 🎉
+              </h1>
+              <p className="text-white/90 text-lg md:text-xl mb-2">
+                ¡Felicidades! Has conquistado todos los desafíos de Numerika
               </p>
+            </div>
+
+            {/* Video Container */}
+            <div className="relative w-full aspect-video bg-black rounded-lg overflow-hidden mb-6">
+              <iframe
+                src="https://www.youtube.com/embed/HktqvePKwCE?autoplay=1&controls=1&modestbranding=1&rel=0&showinfo=0"
+                title="Video Final de Numerika - ¡Aventura Completada!"
+                className="w-full h-full"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
+
+            {/* Controles */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               
-              <div className="bg-black/20 backdrop-blur-sm rounded-2xl p-6 mb-8 border border-amber-500/30">
-                <FortressStatsComponent 
-                  {...gameStats}
-                />
-              </div>
-              
-              <div className="flex gap-4 justify-center">
-                <Link 
-                  to="/app/niveles" 
-                  className="px-8 py-4 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center gap-2"
-                >
-                  🏠 Volver al mapa
-                </Link>
-              </div>
-              
-              {/* Mensaje motivacional adicional */}
-              <div className="mt-6 p-4 bg-gradient-to-r from-emerald-500/20 to-teal-500/20 rounded-xl border border-emerald-400/30">
-                <p className="text-emerald-200 text-sm font-medium">
-                  🎖️ ¡Has demostrado ser un verdadero maestro de las matemáticas! 
-                  La fortaleza ha sido conquistada con precisión y sabiduría.
-                </p>
-              </div>
+              {/* Botón para ir al mapa */}
+              <Link 
+                to="/app/niveles" 
+                className="px-8 py-4 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-bold text-lg rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg"
+              >
+                � ¡Ver Resultados!
+              </Link>
+            </div>
+
+            {/* Mensaje de Logro */}
+            <div className="text-center mt-6 p-4 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 rounded-lg border border-yellow-500/30">
+              <p className="text-yellow-300 font-bold text-lg mb-2">
+                � ¡Eres un Verdadero Maestro Matemático! 🌟
+              </p>
+              <p className="text-white/80 text-sm">
+                Has demostrado tu habilidad en multiplicación, suma repetida, operaciones complejas y resolución de problemas. 
+                ¡Continúa practicando y explorando el mundo de las matemáticas!
+              </p>
             </div>
           </div>
         </div>
