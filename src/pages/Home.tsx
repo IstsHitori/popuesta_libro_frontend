@@ -34,7 +34,9 @@ export default function GameScreen() {
           <div className="flex gap-8 items-center">
             <div className="intro-image">
               <img
-                src={userProfile.gender === "Masculino" ? image_kid : image_girl}
+                src={
+                  userProfile.gender === "Masculino" ? image_kid : image_girl
+                }
                 alt="Tomás"
                 className="w-[300px] rounded-lg shadow-lg transition-transform duration-200 hover:scale-105 animate__animated animate__fadeInLeft"
               />
