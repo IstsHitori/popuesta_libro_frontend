@@ -12,6 +12,76 @@ import { useCoinsStore } from '../../stores/coins.store';
 import { useLevelCompletion } from '../../hooks/levels/useLevelCompletion';
 import { useLevelTimerStore } from '../../stores/level-timer.store';
 
+// Función para generar números distractores
+function generateDistractorNumbers(correctNumber: number, count: number): number[] {
+  const distractors: number[] = [];
+  const usedNumbers = new Set<number>();
+  usedNumbers.add(correctNumber); // No repetir el número correcto
+  
+  while (distractors.length < count) {
+    let randomNum: number;
+    
+    // Generar números en un rango más amplio para mayor variedad
+    if (Math.random() < 0.7) {
+      // 70% de probabilidad: números cercanos al correcto (más confusos)
+      const min = Math.max(1, correctNumber - 3);
+      const max = correctNumber + 3;
+      randomNum = Math.floor(Math.random() * (max - min + 1)) + min;
+    } else {
+      // 30% de probabilidad: números más aleatorios para variedad
+      randomNum = Math.floor(Math.random() * 9) + 1; // números del 1 al 9
+    }
+    
+    // Evitar números que ya están en uso
+    if (!usedNumbers.has(randomNum)) {
+      distractors.push(randomNum);
+      usedNumbers.add(randomNum);
+    }
+  }
+  
+  return distractors;
+}
+
+// Create addition boxes for the current problem
+function createAdditionBoxes(problem: RepeatedAdditionProblem): AdditionBox[] {
+  return Array.from({ length: problem.repetitions }, (_, index) => ({
+    id: `box-${index}`,
+    position: index,
+    currentNumber: null,
+    isHighlighted: false,
+    isCorrect: null
+  }));
+}
+
+// Create draggable numbers for the current problem
+function createAvailableNumbers(problem: RepeatedAdditionProblem): DraggableNumber[] {
+  // Comenzar con los números originales del problema
+  let allNumbers = [...problem.availableNumbers];
+  
+  // Agregar más números distractores para aumentar la dificultad
+  const additionalDistractors = generateDistractorNumbers(problem.correctNumber, 3) // Agregar 3 números más
+    .filter(num => {
+      // Si el número ya existe muchas veces, no agregarlo
+      const count = problem.availableNumbers.filter(n => n === num).length;
+      return count < 2; // Permitir máximo 2 repeticiones de números existentes
+    });
+  
+  allNumbers = [...allNumbers, ...additionalDistractors];
+  
+  // Mezclar todos los números usando Fisher-Yates shuffle
+  for (let i = allNumbers.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [allNumbers[i], allNumbers[j]] = [allNumbers[j], allNumbers[i]];
+  }
+  
+  return allNumbers.map((num, index) => ({
+    id: `number-${num}-${index}`,
+    value: num,
+    isUsed: false,
+    originalPosition: { x: 50 + index * 80, y: 500 }
+  }));
+}
+
 export function useRepeatedAdditionGame() {
   const { addCoins, subtractCoins } = useCoinsStore();
   const { completeLevel } = useLevelCompletion();
@@ -32,27 +102,6 @@ export function useRepeatedAdditionGame() {
       isLevelCompleted: false
     };
   });
-
-  // Create addition boxes for the current problem
-  function createAdditionBoxes(problem: RepeatedAdditionProblem): AdditionBox[] {
-    return Array.from({ length: problem.repetitions }, (_, index) => ({
-      id: `box-${index}`,
-      position: index,
-      currentNumber: null,
-      isHighlighted: false,
-      isCorrect: null
-    }));
-  }
-
-  // Create draggable numbers for the current problem
-  function createAvailableNumbers(problem: RepeatedAdditionProblem): DraggableNumber[] {
-    return problem.availableNumbers.map((num, index) => ({
-      id: `number-${num}-${index}`,
-      value: num,
-      isUsed: false,
-      originalPosition: { x: 50 + index * 80, y: 500 }
-    }));
-  }
 
   // Handle dropping a number into a box
   const handleNumberDrop = useCallback((numberId: string, boxId: string): AdditionDropResult => {
