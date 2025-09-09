@@ -10,7 +10,7 @@ export interface UserActions {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const useUserStore = create<UserState & UserActions>((set, get) => ({
+export const useUserStore = create<UserState & UserActions>((set) => ({
   userProfile: {
     id: 1,
     document: "test",

@@ -9,7 +9,7 @@ interface LevelActions {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const useLevelStore = create<LevelStore & LevelActions>((set, get) => ({
+export const useLevelStore = create<LevelStore & LevelActions>((set) => ({
   level: 1,
   setLevel: (level) => {
     set(() => ({ level }));

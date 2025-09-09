@@ -10,7 +10,7 @@ interface AuthActions {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const useAuthStore = create<AuthState & AuthActions>((set, get) => ({
+export const useAuthStore = create<AuthState & AuthActions>((set) => ({
   resetToken: "",
   authToken: localStorage.getItem("authToken") || "",
   setAuthToken: (authToken) => {
