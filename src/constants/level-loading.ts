@@ -3,7 +3,7 @@
 export const LEVEL_LOADING_CONFIG = {
   level1: {
     levelNumber: 1,
-    levelTitle: "El reto del mercado de café",
+    levelTitle: "El reto del bosque",
     backgroundImage: "/tomas/bosque_de_la_ciencia.webp",
     tip: "🌳 En este bosque mágico aprenderás que multiplicar es agrupar elementos iguales. ¡Arrastra los números para formar grupos perfectos!",
     duration: 3500
